@@ -8,25 +8,34 @@ export const roomService = {
     }
 }
 
-
 export type RoomResponse = {
     id: number
-    roomNumber: number
+    roomNumber: string | null
     singleBeds: number
     doubleBeds: number
     status: RoomStatus
-    stayActive: StayActiveResponse
+    stay: StayResponse | null
 }
 
 export type RoomStatus = "OCCUPIED" | "AVAILABLE" | "MAINTENANCE" | "RESERVED"
 
-export type StayActiveResponse = {
+export type StayResponse = {
     id: number
-    client: ClientResponse
-    totalGuests: number
-    dailyPrice: number
+    client: ClientSummary | null
+    room: RoomSummary | null
     checkIn: string
-    stayGuests: StayGuest[]
+    checkOut: string
+    dailyPrice: number | null
+    partialPrice: number | null
+    totalPrice: number | null
+    stayStatus: string
+}
+
+export type ClientSummary = Pick<ClientResponse, "id" | "firstName" | "lastName">
+
+export type RoomSummary = {
+    id: number
+    roomNumber: string | null
 }
 
 export type StayGuest = {
