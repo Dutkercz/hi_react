@@ -29,9 +29,9 @@ export type StayResponse = {
     room: RoomSummary | null
     checkIn: string
     checkOut: string
-    dailyPrice: number | null
-    partialPrice: number | null
-    totalPrice: number | null
+    dailyPrice: number
+    paidPrice: number
+    totalPrice: number 
     stayStatus: 'CURRENT' | 'CANCELED' | 'FINISHED'
 }
 

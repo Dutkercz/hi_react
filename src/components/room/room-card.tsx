@@ -4,7 +4,7 @@ import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from
 import { type RoomResponse } from '@/api/room'
 import { Dialog, DialogTrigger } from '../ui/dialog'
 import { useState } from 'react'
-import ManageRoom from './manage-room-dialog'
+import ManageStay from './manage-stay-dialog'
 import { useRoomCard } from './useRoomCard'
 
 type RoomCardProps = {
@@ -62,7 +62,7 @@ const RoomCard = ({ room }: RoomCardProps) => {
             </CardContent>
 
             <CardFooter className='flex flex-col items-center rounded-lg gap-3 m-1'>
-                {stay ? 
+                {stay ?
                     <div className='flex items-center justify-center gap-1'>
                         <div className='rounded-lg border border-border/70 p-2 bg-muted'>
                             <p className='text-xs text-muted-foreground'>Valor Diária</p>
@@ -73,13 +73,13 @@ const RoomCard = ({ room }: RoomCardProps) => {
                         <div className='rounded-lg border border-border/70 p-2 bg-muted'>
                             <p className='text-xs text-muted-foreground'>Valor Pago</p>
                             <p className='font-medium'>
-                                {formatCurrency(stay?.partialPrice ?? stay?.totalPrice ?? stay?.dailyPrice)}
+                                {formatCurrency(stay?.paidPrice)}
                             </p>
                         </div>
                         <div className='rounded-lg border border-border/70 p-2 bg-muted'>
                             <p className='text-xs text-muted-foreground'>A pagar</p>
                             <p className='font-medium'>
-                                {formatCurrency(stay?.partialPrice ?? stay?.totalPrice ?? stay?.dailyPrice)}
+                                {formatCurrency(stay?.paidPrice < stay.totalPrice ? stay?.totalPrice : (stay?.totalPrice - stay?.paidPrice))}
                             </p>
                         </div>
                         <div className='rounded-lg border border-border/70 p-2 bg-muted'>
@@ -114,7 +114,7 @@ const RoomCard = ({ room }: RoomCardProps) => {
                                 {room.status === 'AVAILABLE' ? 'Check-in' : 'Check-out'}
                             </Button>}>
                             </DialogTrigger>
-                            <ManageRoom room={room} setOpen={setOpen} />
+                            <ManageStay room={room} setOpen={setOpen} />
                         </Dialog>
                     </div>
                 </CardAction>

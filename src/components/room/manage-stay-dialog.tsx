@@ -12,13 +12,14 @@ import { stayService, type StayRequest } from '@/api/stay'
 import { toast } from 'sonner'
 import { useEffect, useState } from 'react'
 import { useRoomCard } from './useRoomCard'
+import { Checkbox } from '../ui/checkbox'
 
 type ManageRoomProps = {
     setOpen: (v: boolean) => void
     room: RoomResponse
 }
 
-const ManageRoom = ({ setOpen, room }: ManageRoomProps) => {
+const ManageStay = ({ setOpen, room }: ManageRoomProps) => {
 
     const { dailyPrice, formatCurrency } = useRoomCard(room)
 
@@ -94,17 +95,19 @@ const ManageRoom = ({ setOpen, room }: ManageRoomProps) => {
 
     return (
         <DialogContent className="sm:max-w-xl">
-            <form onSubmit={form.handleSubmit(subtmit)} className="space-y-5">
+            <form onSubmit={form.handleSubmit(subtmit, (err) => console.log("Erros do Form:", err))} className="space-y-5">
                 <DialogHeader className="space-y-2">
                     <DialogTitle className="text-lg font-semibold">
-                        {room.status === "AVAILABLE" ? `Check-in Apartamento ${room.id}` : `Atualizar hospedagem ${room.id}`}
+                        {room.status === "AVAILABLE" ? `Check-in Apartamento ${room.roomNumber}` : `Atualizar hospedagem ${room.roomNumber}`}
                     </DialogTitle>
                     <DialogDescription className="text-sm text-muted-foreground">
                         Preencha os dados da hospedagem para prosseguir.
                     </DialogDescription>
                 </DialogHeader>
 
-                <input type="hidden" {...form.register("roomId")} />
+                {room?.id && (
+                    <input type="hidden" {...form.register("roomId", { valueAsNumber: true })} />
+                )}
 
                 <FieldGroup className="grid gap-4 md:grid-cols-2">
 
@@ -183,6 +186,26 @@ const ManageRoom = ({ setOpen, room }: ManageRoomProps) => {
                                 <div>Diária <span>{formatCurrency(dailyPrice[totalGuests as keyof typeof dailyPrice])}</span></div>
                             }
                         </FieldContent>
+
+                        <Controller
+                            name='isPaid'
+                            control={form.control}
+                            render={({ field, fieldState }) => (
+                                <div >
+                                    <Field data-invalid={fieldState.invalid} >
+                                        <FieldContent className="flex flex-row items-center space-x-3 space-y-0">
+                                            <FieldLabel htmlFor='isPaid'>Pago no chekcin</FieldLabel>
+                                            <Checkbox
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                            />
+                                        </FieldContent>
+                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                                    </Field>
+                                </div>
+                            )}
+                        />
+
                     </Field>
 
                     <Controller
@@ -205,6 +228,7 @@ const ManageRoom = ({ setOpen, room }: ManageRoomProps) => {
                             </Field>
                         )}
                     />
+
 
                     {totalGuests > 1 && (
                         <Field className="col-span-2 rounded-xl border border-border/70 bg-muted/40 p-4">
@@ -237,4 +261,4 @@ const ManageRoom = ({ setOpen, room }: ManageRoomProps) => {
     )
 }
 
-export default ManageRoom
+export default ManageStay
