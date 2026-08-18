@@ -42,7 +42,7 @@ export const NavBar = () => {
                                 className="flex items-center justify-center"
                             >
                                 <ReceiptText />
-                                <span>Cadastre-se</span>
+                                <span>Cadastrar</span>
                             </Link>
                         }>
                         </NavigationMenuLink>

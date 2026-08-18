@@ -1,7 +1,7 @@
 import z from "zod";
 import { addressCreateSchema } from "../address/address-schema";
 
-export const registerClinetSchema = z.object({
+export const registerClientSchema = z.object({
     firstName: z
         .string()
         .trim()
@@ -14,7 +14,8 @@ export const registerClinetSchema = z.object({
         .max(30, "O campo nome de conter no máximo 30 caracteres"),
     cpf: z
         .string()
-        .regex(/^\d{3}.?\d{3}.?\d{3}-?\d{2}$/, "CPF fora do formato esperado"),
+        .regex(/^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/, "CPF fora do formato esperado")
+        .transform((val) => val.replace(/[.-]/g, "")),
     cnpj: z
         .string()
         .regex(/^\d{2}.?\d{3}.?\d{3}-?\d{4}\/?\d{2} ?$/, "CNPJ fora do formato esperado")
@@ -22,10 +23,9 @@ export const registerClinetSchema = z.object({
         .optional(),
     phoneNumber: z
         .string()
-        .trim()
-        .min(10)
-        .max(14),
+        .transform((val) => val.replace(/[()\-_ ]/g, ""))
+        .pipe(z.string().min(10, "Telefone muito curto").max(14, "Telefone muito longo")),
     addresses: z.array(addressCreateSchema,).min(1)
 })
 
-export type RegisterClientSchema = z.infer<typeof registerClinetSchema>
+export type RegisterClientSchema = z.infer<typeof registerClientSchema>

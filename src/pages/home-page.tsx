@@ -14,7 +14,7 @@ const HomePage = () => {
 
     return (
         <>
-            <div className='grid grid-cols-3 gap-2'>
+            <div className='grid grid-cols-3 gap-2 p-2'>
                 {rooms && rooms?.map((room) => (
                     <RoomCard key={room.id} room={room} />
                 ))}

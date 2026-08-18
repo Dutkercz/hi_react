@@ -7,13 +7,16 @@ export const staySchema = z.object({
         .number()
         .nonoptional(),
     totalGuests: z
-        .number()
+        .number("A campo deve receber um número de 1 a 4")
+        .min(1, "Não é possível registrar menos que 1 hospede em uma diária")
+        .max(4, "Não é possível registrar mais que 4 hopedes em uma diária")
         .nonoptional(),
     stayGuests: array(
         z.object({ name: z.string() })),
+    isPaid: z.boolean(),
     checkIn: z
         .string()
-        .nonempty({ message: 'O campo data não pode estar em branco.' })
+        .nonempty({ message: 'O campo data de checkin não pode estar em branco.' })
         .refine(
             (dateString) => {
                 const checkIn = new Date(dateString);

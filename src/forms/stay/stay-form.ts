@@ -7,13 +7,15 @@ export const useStayRequestForm = (id: number) => {
     return useForm<StayRequest>({
         resolver: zodResolver(staySchema),
         defaultValues: {
-            clientId: 0,
+            clientId: undefined,
             roomId: id,
             checkIn: "",
             checkOut: "",
             totalGuests: 1,
+            isPaid: false,
             stayGuests: [],
         },
-        shouldUnregister: true
+        shouldUnregister: true,
+        mode: "onBlur"
     })
 } 

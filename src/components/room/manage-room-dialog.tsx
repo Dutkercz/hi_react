@@ -1,4 +1,4 @@
-import type { RoomStatus } from '@/api/room'
+import type { RoomResponse } from '@/api/room'
 import { Button } from '../ui/button'
 import { DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog'
 import { Field, FieldContent, FieldError, FieldGroup, FieldLabel } from '../ui/field'
@@ -11,15 +11,16 @@ import InputMask from '@react-input/mask/InputMask'
 import { stayService, type StayRequest } from '@/api/stay'
 import { toast } from 'sonner'
 import { useEffect, useState } from 'react'
-import { Trash2 } from 'lucide-react'
+import { useRoomCard } from './useRoomCard'
 
 type ManageRoomProps = {
     setOpen: (v: boolean) => void
-    manageType: RoomStatus
-    roomId: number
+    room: RoomResponse
 }
 
-const ManageRoom = ({ setOpen, manageType, roomId }: ManageRoomProps) => {
+const ManageRoom = ({ setOpen, room }: ManageRoomProps) => {
+
+    const { dailyPrice, formatCurrency } = useRoomCard(room)
 
     const [cpfValue, setCpfValue] = useState("")
     const [clientName, setClientName] = useState("")
@@ -28,7 +29,7 @@ const ManageRoom = ({ setOpen, manageType, roomId }: ManageRoomProps) => {
         form.reset()
         setOpen(false)
     }
-    const form = useStayRequestForm(roomId)
+    const form = useStayRequestForm(room.id)
     const queryClient = useQueryClient()
 
     const { mutate: cpfFindMutation, isPending: cpfPending, isError: cpfError, reset: cpfReset } = useMutation({
@@ -78,7 +79,7 @@ const ManageRoom = ({ setOpen, manageType, roomId }: ManageRoomProps) => {
         mutationFn: (data: StayRequest) => stayService.newStay(data),
         onSuccess: () => {
             toast.success("Hospedagem registrada com sucesso")
-            queryClient.invalidateQueries({queryKey: ['rooms']})
+            queryClient.invalidateQueries({ queryKey: ['rooms'] })
             handleClose()
         },
         onError: () => {
@@ -96,7 +97,7 @@ const ManageRoom = ({ setOpen, manageType, roomId }: ManageRoomProps) => {
             <form onSubmit={form.handleSubmit(subtmit)} className="space-y-5">
                 <DialogHeader className="space-y-2">
                     <DialogTitle className="text-lg font-semibold">
-                        {manageType === "AVAILABLE" ? `Check-in Apartamento ${roomId}` : `Atualizar hospedagem ${roomId}`}
+                        {room.status === "AVAILABLE" ? `Check-in Apartamento ${room.id}` : `Atualizar hospedagem ${room.id}`}
                     </DialogTitle>
                     <DialogDescription className="text-sm text-muted-foreground">
                         Preencha os dados da hospedagem para prosseguir.
@@ -107,7 +108,7 @@ const ManageRoom = ({ setOpen, manageType, roomId }: ManageRoomProps) => {
 
                 <FieldGroup className="grid gap-4 md:grid-cols-2">
 
-                <input type="hidden" {...form.register("clientId")} />
+                    <input type="hidden" {...form.register("clientId")} />
 
                     <Field className="col-span-full">
                         <div className="flex w-full items-center gap-2.5">
@@ -173,45 +174,51 @@ const ManageRoom = ({ setOpen, manageType, roomId }: ManageRoomProps) => {
                         )}
                     />
 
+
                     <Field className="flex flex-col justify-between gap-2 rounded-xl border border-border/70 bg-muted/50 p-4">
                         <FieldLabel>Cliente</FieldLabel>
                         <FieldContent className="text-sm text-muted-foreground">
                             {clientName || 'Nenhum cliente selecionado'}
+                            {clientName &&
+                                <div>Diária <span>{formatCurrency(dailyPrice[totalGuests as keyof typeof dailyPrice])}</span></div>
+                            }
                         </FieldContent>
                     </Field>
 
-                    <Field className="rounded-xl border border-border/70 bg-background/70 p-4">
-                        <FieldLabel htmlFor="totalGuests">Total de hóspedes</FieldLabel>
-                        <Input
-                            id="totalGuests"
-                            type="number"
-                            min={1}
-                            className="mt-2"
-                            {...form.register("totalGuests", { valueAsNumber: true })}
-                        />
-                    </Field>
+                    <Controller
+                        name="totalGuests"
+                        control={form.control}
+                        render={({ field, fieldState }) => (
+                            <Field data-invalid={fieldState.invalid}
+                                className="">
+                                <FieldLabel htmlFor="totalGuests">Total de hóspedes</FieldLabel>
+                                <Input
+                                    id="totalGuests"
+                                    type="number"
+                                    {...field}
+                                    min={1}
+                                    autoComplete='off'
+                                    className="mt-2"
+                                    {...form.register("totalGuests", { valueAsNumber: true })}
+                                />
+                                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                            </Field>
+                        )}
+                    />
+
                     {totalGuests > 1 && (
-                        <Field className="col-span-full rounded-xl border border-border/70 bg-muted/40 p-4">
+                        <Field className="col-span-2 rounded-xl border border-border/70 bg-muted/40 p-4">
                             <FieldLabel>Hóspedes extras</FieldLabel>
                             <div className="mt-3 space-y-3">
-                                {stayGuestsFields.fields.map((guest, index) => {
+                                {stayGuestsFields.fields.slice(0, 3).map((guest, index) => {
                                     const error = form.formState.errors.stayGuests?.[index]?.name
                                     return (
                                         <Field key={guest.id} className="flex items-center gap-2.5">
                                             <Input
+                                                autoComplete='off'
                                                 placeholder={`Nome do hóspede ${index + 2}`}
                                                 {...form.register(`stayGuests.${index}.name`)}
                                             />
-                                            {stayGuestsFields.fields.length > 1 && (
-                                                <Button
-                                                    type="button"
-                                                    variant="outline"
-                                                    size="sm"
-                                                    onClick={() => stayGuestsFields.remove(index)}
-                                                >
-                                                    <Trash2 className="h-4 w-4" />
-                                                </Button>
-                                            )}
                                             {error && <FieldError errors={[error]} />}
                                         </Field>
                                     )

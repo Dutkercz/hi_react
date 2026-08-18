@@ -1,65 +1,45 @@
 import { BedDoubleIcon, BedIcon } from 'lucide-react'
 import { Button } from '../ui/button'
-import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card'
+import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from '../ui/card'
 import { type RoomResponse } from '@/api/room'
 import { Dialog, DialogTrigger } from '../ui/dialog'
 import { useState } from 'react'
 import ManageRoom from './manage-room-dialog'
+import { useRoomCard } from './useRoomCard'
 
 type RoomCardProps = {
     room: RoomResponse
 }
 
 const RoomCard = ({ room }: RoomCardProps) => {
-    const totalGuests = room.doubleBeds * 2 + room.singleBeds
     const stay = room.stay
-
-    const formatCurrency = (value: number | null | undefined) => {
-        if (typeof value !== 'number') return '—'
-        return new Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: 'BRL',
-        }).format(value)
-    }
-
-    const statusLabel = {
-        AVAILABLE: 'Disponível',
-        OCCUPIED: 'Ocupado',
-        MAINTENANCE: 'Manutenção',
-        RESERVED: 'Reservado',
-    }[room.status]
-
-    const statusClasses = {
-        AVAILABLE: 'bg-emerald-500/10 text-emerald-700',
-        OCCUPIED: 'bg-sky-500/10 text-sky-700',
-        MAINTENANCE: 'bg-amber-500/10 text-amber-700',
-        RESERVED: 'bg-violet-500/10 text-violet-700',
-    }[room.status]
-
     const [open, setOpen] = useState(false)
 
+    const { addDailyMutation, formatCurrency, dailyPrice,
+        roomStatus, roomStatusClasses, stayStatus } = useRoomCard(room)
+
+
     return (
-        <Card size='sm' className='h-full border-border/70 shadow-sm'>
-            <CardHeader>
-                <div className='flex items-start justify-between gap-3'>
-                    <div className='rounded-lg bg-muted/60 p-2'>
-                        <CardTitle>Apto {room.roomNumber ?? '—'}</CardTitle>
-                        <CardDescription>Acomodação para até <span className='font-extrabold'>{totalGuests}</span> pessoas</CardDescription>
-                    </div>
-                    <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusClasses}`}>
-                        {statusLabel}
+        <Card className='h-full border-border/70 shadow-sm'>
+            <CardHeader >
+                <div className='flex items-start justify-between'>
+                    <CardTitle className={`rounded-lg px-2.5 py-1 text-xs font-medium ${roomStatusClasses}`}>Apartamento {room.roomNumber ?? '—'}</CardTitle>
+                    <span className={`rounded-lg px-2.5 py-1 text-xs font-medium ${roomStatusClasses}`}>
+                        {roomStatus}
                     </span>
                 </div>
             </CardHeader>
 
             <CardContent className='flex flex-col gap-3 text-sm'>
-                <div className='grid grid-cols-2 gap-2'>
-                    <div className='rounded-lg bg-muted/60 p-2 flex items-center justify-center gap-2'>
-                        <BedIcon />
-                        <p className='text-center text-muted-foreground font-medium'>
-                            Cama solteiro <span className='font-extrabold'>{room.singleBeds}</span>
-                        </p>
-                    </div>
+                <div className='flex items-center justify-center gap-2'>
+                    {room.singleBeds > 0 &&
+                        <div className='c rounded-lg bg-muted/60 p-2 flex items-center justify-center gap-2'>
+                            <BedIcon />
+                            <p className='text-center text-muted-foreground font-medium'>
+                                Cama solteiro <span className='font-extrabold'>{room.singleBeds}</span>
+                            </p>
+                        </div>
+                    }
                     <div className='rounded-lg bg-muted/60 p-2 flex items-center justify-center gap-2'>
                         <BedDoubleIcon />
                         <p className='text-center text-muted-foreground font-medium'>
@@ -70,35 +50,73 @@ const RoomCard = ({ room }: RoomCardProps) => {
 
                 {stay?.client?.id &&
                     <div className='rounded-lg border border-border/70 p-3'>
-                        <p className='text-xs text-muted-foreground'>Estadia ativa</p>
                         <p className='font-medium'>Cliente: {stay.client.firstName} {stay.client.lastName}</p>
-                        <p className='text-sm text-muted-foreground'>Status: {stay.stayStatus}</p>
-                        <p className='text-sm text-muted-foreground'>Check-in: {new Date(stay.checkIn).toLocaleDateString('pt-BR')}</p>
+                        <p className='text-sm text-muted-foreground'>Status: {stayStatus[stay.stayStatus]}</p>
+                        <p className='text-sm text-muted-foreground'>Checkin: {new Date(stay.checkIn).toLocaleDateString('pt-BR')}</p>
                         {stay.checkOut && (
-                            <p className='text-sm text-muted-foreground'>Check-out: {new Date(stay.checkOut).toLocaleDateString('pt-BR')}</p>
+                            <p className='text-sm text-muted-foreground'>Checkout: {new Date(stay.checkOut).toLocaleDateString('pt-BR')}</p>
+
                         )}
                     </div>
                 }
             </CardContent>
 
-            <CardFooter className='flex items-center justify-between gap-2'>
-                <div>
-                    <p className='text-xs text-muted-foreground'>Valor</p>
-                    <p className='font-medium'>
-                        {formatCurrency(stay?.partialPrice ?? stay?.totalPrice ?? stay?.dailyPrice)}
-                    </p>
-                </div>
-                <CardAction>
+            <CardFooter className='flex flex-col items-center rounded-lg gap-3 m-1'>
+                {stay ? 
+                    <div className='flex items-center justify-center gap-1'>
+                        <div className='rounded-lg border border-border/70 p-2 bg-muted'>
+                            <p className='text-xs text-muted-foreground'>Valor Diária</p>
+                            <p className='font-medium'>
+                                {formatCurrency(stay?.dailyPrice)}
+                            </p>
+                        </div>
+                        <div className='rounded-lg border border-border/70 p-2 bg-muted'>
+                            <p className='text-xs text-muted-foreground'>Valor Pago</p>
+                            <p className='font-medium'>
+                                {formatCurrency(stay?.partialPrice ?? stay?.totalPrice ?? stay?.dailyPrice)}
+                            </p>
+                        </div>
+                        <div className='rounded-lg border border-border/70 p-2 bg-muted'>
+                            <p className='text-xs text-muted-foreground'>A pagar</p>
+                            <p className='font-medium'>
+                                {formatCurrency(stay?.partialPrice ?? stay?.totalPrice ?? stay?.dailyPrice)}
+                            </p>
+                        </div>
+                        <div className='rounded-lg border border-border/70 p-2 bg-muted'>
+                            <p className='text-xs text-muted-foreground'>Total</p>
+                            <p className='font-medium'>
+                                {formatCurrency(stay?.totalPrice)}
+                            </p>
+                        </div>
+                    </div>
+                    :
+                    <div className='border-2 bg-muted rounded-lg p-2'>
+                        <h2 className='text-muted-foreground text-center mb-2 text-xl'>Preços</h2>
+                        <div className='flex gap-2'>
+                            <p>01 Pessoa <span className='text-muted-foreground'>{formatCurrency(dailyPrice[1])}</span></p>
+                            <p>02 Pessoa <span className='text-muted-foreground'>{formatCurrency(dailyPrice[2])}</span></p>
+                            <p>03 Pessoa <span className='text-muted-foreground'>{formatCurrency(dailyPrice[3])}</span></p>
+                            <p>04 Pessoa <span className='text-muted-foreground'>{formatCurrency(dailyPrice[4])}</span></p>
+                        </div>
+                    </div>
+                }
+                <CardAction className='w-full flex justify-center'>
+                    <div className='flex items-center justify-center w-full gap-2'>
+                        {room.stay &&
+                            <Button className="flex-1" onClick={() => addDailyMutation.mutate()}>
+                                Adicionar diária
+                            </Button>
+                        }
 
-                    <Dialog open={open} onOpenChange={setOpen}>
-                        <DialogTrigger render={<Button onClick={() => setOpen(true)} size='sm' variant={room.status === 'AVAILABLE' ? 'default' : 'outline'}>
-                            {room.status === 'AVAILABLE' ? 'Check-in' : 'Check-out'}
-                        </Button>}>
-                        </DialogTrigger>
-                        <ManageRoom roomId={room.id} setOpen={setOpen} manageType={room.status} />
-                    </Dialog>
-
-
+                        <Dialog open={open} onOpenChange={setOpen}>
+                            <DialogTrigger className="flex-1 flex" render={<Button className="w-full"
+                                onClick={() => setOpen(true)} variant={room.status === 'AVAILABLE' ? 'default' : 'outline'}>
+                                {room.status === 'AVAILABLE' ? 'Check-in' : 'Check-out'}
+                            </Button>}>
+                            </DialogTrigger>
+                            <ManageRoom room={room} setOpen={setOpen} />
+                        </Dialog>
+                    </div>
                 </CardAction>
             </CardFooter>
         </Card>

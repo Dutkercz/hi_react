@@ -5,6 +5,10 @@ export const roomService = {
     getAll: async (): Promise<RoomResponse[]> => {
         const response = await axiosService.get("/rooms")
         return response.data
+    },
+    addDaily: async (id: number) => {
+        const response = await axiosService.put(`/rooms/add-daily/${id}`)
+        return response.data
     }
 }
 
@@ -28,7 +32,7 @@ export type StayResponse = {
     dailyPrice: number | null
     partialPrice: number | null
     totalPrice: number | null
-    stayStatus: string
+    stayStatus: 'CURRENT' | 'CANCELED' | 'FINISHED'
 }
 
 export type ClientSummary = Pick<ClientResponse, "id" | "firstName" | "lastName">

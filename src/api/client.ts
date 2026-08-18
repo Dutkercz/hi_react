@@ -1,20 +1,20 @@
-import { axiosService } from "@/lib/axios"
+import { axiosService } from "@/lib/axios";
 
 export const clientService = {
-    createNewClient: async (data: ClientRequest): Promise<ClientResponse[]> => {
+    createNewClient: async (data: ClientRequest) => {
         const response = await axiosService.post("/clients", data)
         return response.data
     },
-    findByCpf: async (cpf : string) => {
-        try{
-            const response = await axiosService.get(`/clients/${cpf}`)
-            return response.data
-        }catch(error){
-            console.log(error);
-        }
+    findByCpf: async (cpf: string) => {
+        const response = await axiosService.get(`/clients/${cpf}`)
+        return response.data
     },
     findAllActiveClients: async () => {
         const response = await axiosService.get("/clients")
+        return response.data
+    },
+    updateClient: async (data: ClientUpdate) => {
+        const response = await axiosService.put("/clients", data)
         return response.data
     }
 }
@@ -24,7 +24,7 @@ export type ClientRequest = {
     lastName: string
     cpf: string
     cnpj?: string
-    phoneNumber : string
+    phoneNumber: string
     addresses: Address[]
 }
 
@@ -40,4 +40,11 @@ export type ClientResponse = {
     id: number
     firstName: string
     lastName: string
+}
+
+export type ClientUpdate = {
+    id: number
+    firstName: string
+    lastName: string
+    phoneNumber: string
 }

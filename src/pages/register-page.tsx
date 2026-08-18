@@ -1,4 +1,5 @@
 import { cepService, type CepResponseData } from "@/api/cep"
+import type { ClientRequest } from "@/api/client"
 import { Button } from "@/components/ui/button"
 import { CardDescription } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -13,7 +14,7 @@ import {
   FieldSet,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { useRegisterClientForm } from "@/forms/client/register-form"
+import { useRegisterClientForm } from "@/forms/client/form"
 import InputMask from "@react-input/mask/InputMask"
 import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
@@ -25,6 +26,10 @@ const RegisterPage = () => {
 
   const handleCheckBox = () => {
     setControlCheckBox((v) => !v)
+  }
+
+  const handleOnSubmit = (data: ClientRequest) => {
+    onSubmit(data)
   }
 
   const findCepMutation = useMutation({
@@ -49,7 +54,7 @@ const RegisterPage = () => {
     <div className="min-h-screen w-full flex items-center justify-center p-4">
 
       <div className="w-full max-w-xl p-4 bg-muted/60">
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(handleOnSubmit, (err) => console.log("Erros do Form:", err))}>
           <FieldGroup >
             <FieldSet>
               <FieldLegend className="text-center">Cadastro de Clientes</FieldLegend>
@@ -57,7 +62,6 @@ const RegisterPage = () => {
                 Insira os dados abaixo para cadastrar um novo cliente
               </FieldDescription>
               <FieldGroup>
-
                 <Controller
                   control={form.control}
                   name="firstName"
@@ -71,6 +75,7 @@ const RegisterPage = () => {
                         id="firstName"
                         placeholder="Ex.: Álvaro"
                         aria-invalid={fieldState.invalid}
+                        autoComplete="false"
                       />
                       {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                     </Field>
@@ -89,6 +94,28 @@ const RegisterPage = () => {
                         id="lastName"
                         aria-invalid={fieldState.invalid}
                         placeholder="Ex.: Monteiro"
+                        autoComplete="false"
+                      />
+                      {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                    </Field>
+                  )} />
+
+                <Controller
+                  control={form.control}
+                  name="phoneNumber"
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="phoneNumber">
+                        * Telefone
+                      </FieldLabel>
+                      <InputMask
+                        component={Input}
+                        mask="(__)-_____-____"
+                        replacement={{ _: /\d/ }}
+                        {...field}
+                        id="phoneNumber"
+                        placeholder="53 - *****-****"
+                        aria-invalid={fieldState.invalid}
                       />
                       {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                     </Field>
@@ -231,7 +258,7 @@ const RegisterPage = () => {
                       </Field>
                     )} />
 
-<Controller
+                  <Controller
                     control={form.control}
                     name={`addresses.${0}.state`}
                     render={({ field, fieldState }) => (
