@@ -8,19 +8,21 @@ import { House, ReceiptText } from "lucide-react"
 export const NavBar = () => {
 
     return (
-        <div className="flex h-12 items-center bg-primary">
-
+        <div className="flex h-18 items-center justify-center bg-primary">
+            <div className='ml-auto p-2'>
+                    <h1>Hotel Itaipu</h1>
+            </div>
             <NavigationMenu className="w-full max-w-none justify-start">
                 <NavigationMenuList>
 
                     <NavigationMenuItem>
                         <NavigationMenuLink
                             render={
-                                <Link to={"/"}><House/> Inicio</Link>
+                                <Link to={"/"}><House /> Inicio</Link>
                             }
                         ></NavigationMenuLink>
                     </NavigationMenuItem>
-                            
+
                     <NavigationMenuItem>
                         <NavigationMenuLink render={
                             <Link
