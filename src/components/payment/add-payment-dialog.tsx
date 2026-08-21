@@ -7,7 +7,7 @@ import { toast } from "sonner"
 import { Input } from "../ui/input"
 import { useRoomCard } from "../room/useRoomCard"
 import { useState } from "react"
-import InputMask from "@react-input/mask/InputMask"
+import { InputNumberFormat } from '@react-input/number-format';
 import { Button } from "../ui/button"
 import { CreditCardIcon, WalletCardsIcon } from "lucide-react"
 
@@ -24,8 +24,12 @@ const AddPaymentDialog = ({ setOpen, room }: AddPaymentDialogProps) => {
     const remainingPrice = room.stay?.remainingPrice ?? 0
 
     const parseAmount = (value: string) => {
+        console.log(value);
+        
         const digits = value.replace(/\D/g, "")
-        return Number(digits)
+        console.log(digits);
+        
+        return Number(digits) / 100
     }
 
     const addPayMutation = useMutation({
@@ -90,17 +94,19 @@ const AddPaymentDialog = ({ setOpen, room }: AddPaymentDialogProps) => {
 
             <div className="space-y-2">
                 <label htmlFor="payment-amount" className="text-sm font-medium">Valor do pagamento</label>
-                <InputMask
+                <InputNumberFormat
                     id="payment-amount"
                     component={Input}
                     value={amount}
-                    mask="R$ _____,__"
-                    replacement={{ _: /\d/ }}
-                    placeholder="R$ 0,00"
-                    inputMode="numeric"
+                    locales="pt-BR"
+                    format="currency"
+                    currency="BRL"
+                    maximumFractionDigits={2}
+                    minimumFractionDigits={2}
+                    autoComplete="off"
                     onChange={(e) => setAmount(e.target.value)}
                 />
-                <p className="text-xs text-muted-foreground">Informe o valor em reais, com duas casas decimais.</p>
+                <p className="text-xs text-muted-foreground">Informe o valor em reais, com até duas casas decimais.</p>
             </div>
 
             <DialogFooter className="-mx-4 -mb-4">

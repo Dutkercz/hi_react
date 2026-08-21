@@ -17,14 +17,17 @@ const App = () => {
         <NavBar />
       </header>
 
-      <Routes>
+      <div className="min-h-screen max-w-full">
 
-        <Route path="/" element={<HomePage />} />
-        <Route path="/bookings" element={<OccupationPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+        <Routes>
 
-      </Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/bookings" element={<OccupationPage />} />
+          <Route path="/register" element={<RegisterPage />} />
 
+        </Routes>
+
+      </div>
 
 
     </QueryClientProvider>

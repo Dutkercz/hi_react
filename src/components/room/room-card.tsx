@@ -4,7 +4,7 @@ import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from
 import { type RoomResponse } from '@/api/room'
 import { Dialog, DialogTrigger } from '../ui/dialog'
 import { useState } from 'react'
-import ManageStay from './manage-stay-dialog'
+import ManageStay from '../stay/manage-stay-dialog'
 import { useRoomCard } from './useRoomCard'
 import AddPaymentDialog from '../payment/add-payment-dialog'
 
@@ -24,6 +24,7 @@ const RoomCard = ({ room }: RoomCardProps) => {
 
 
     return (
+
         <Card className='h-full border-border/70 shadow-sm'>
             <CardHeader>
                 <div className='flex flex-wrap items-start justify-between gap-2'>
@@ -149,10 +150,11 @@ const RoomCard = ({ room }: RoomCardProps) => {
                         }
 
                         <Dialog open={open} onOpenChange={setOpen}>
-                            <DialogTrigger className="flex-1 flex" render={<Button className="w-full"
-                                onClick={() => setOpen(true)} variant={room.status === 'AVAILABLE' ? 'default' : 'destructive'}>
-                                {room.status === 'AVAILABLE' ? 'Check-in' : 'Check-out'}
-                            </Button>}>
+                            <DialogTrigger className="flex-1 flex" render={
+                                <Button className="w-full"
+                                    onClick={() => setOpen(true)} variant={room.status === 'AVAILABLE' ? 'default' : 'destructive'}>
+                                    {room.status === 'AVAILABLE' ? 'Check-in' : 'Check-out'}
+                                </Button>}>
                             </DialogTrigger>
                             <ManageStay room={room} setOpen={setOpen} />
                         </Dialog>

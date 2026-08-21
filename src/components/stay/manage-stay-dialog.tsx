@@ -11,7 +11,7 @@ import InputMask from '@react-input/mask/InputMask'
 import { stayService, type StayRequest } from '@/api/stay'
 import { toast } from 'sonner'
 import { useEffect, useState } from 'react'
-import { useRoomCard } from './useRoomCard'
+import { useRoomCard } from '../room/useRoomCard'
 import { Checkbox } from '../ui/checkbox'
 
 type ManageRoomProps = {
