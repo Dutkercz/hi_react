@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom"
 import { Toaster } from "sonner"
 import OccupationPage from "./pages/occupation-page"
 import RegisterPage from "./pages/register-page"
+import AdminPage from "./pages/admin-page"
 
 const client = new QueryClient()
 
@@ -24,11 +25,11 @@ const App = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/bookings" element={<OccupationPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/admin" element={<AdminPage />} />
 
         </Routes>
 
       </div>
-
 
     </QueryClientProvider>
 

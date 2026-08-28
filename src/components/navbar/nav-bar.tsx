@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import {
     NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList
 } from "@/components/ui/navigation-menu"
-import { House, ReceiptText } from "lucide-react"
+import { House, ReceiptText, ShieldCog } from "lucide-react"
 
 
 export const NavBar = () => {
@@ -36,7 +36,6 @@ export const NavBar = () => {
                         </NavigationMenuLink>
                     </NavigationMenuItem>
 
-
                     <NavigationMenuItem>
                         <NavigationMenuLink render={
                             <Link
@@ -45,6 +44,19 @@ export const NavBar = () => {
                             >
                                 <ReceiptText />
                                 <span>Cadastrar</span>
+                            </Link>
+                        }>
+                        </NavigationMenuLink>
+                    </NavigationMenuItem>
+
+                    <NavigationMenuItem>
+                        <NavigationMenuLink render={
+                            <Link
+                                to="/admin"
+                                className="flex items-center justify-center"
+                            >
+                                <ShieldCog />
+                                <span>Admin</span>
                             </Link>
                         }>
                         </NavigationMenuLink>
