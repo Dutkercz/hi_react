@@ -1,6 +1,12 @@
 import { roomService, type RoomResponse } from "@/api/room"
+import { stayService } from "@/api/stay"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import type { AxiosError } from "axios"
 import { toast } from "sonner"
+
+type BackendError = {
+    message?: string;
+  }
 
 export const useRoomCard = (room: RoomResponse) => {
 
@@ -12,10 +18,10 @@ export const useRoomCard = (room: RoomResponse) => {
             toast.success("Diária adicionada com sucesso!")
             queryClient.invalidateQueries({ queryKey: ["rooms"] })
         },
-        onError: () => {
-            toast.error("Erro ao adicionar diária.")
-            queryClient.invalidateQueries({ queryKey: ["rooms"] })
-        }
+        onError: (erro : AxiosError<BackendError>) => {
+            const mensagemApi = erro.response?.data?.message || "Erro desconhecido";
+            toast.error("Erro ao adicionar diária: " + mensagemApi)
+        } 
     })
 
     const formatCurrency = (value: number | null | undefined) => {
@@ -53,5 +59,36 @@ export const useRoomCard = (room: RoomResponse) => {
         FINISHED: "Finalizada"
     }
 
-    return { addDailyMutation, formatCurrency, roomStatus, roomStatusClasses, stayStatus, dailyPrice }
+    const mutationUpdateStay = useMutation({
+        mutationFn : () => stayService.updateStay(room.stay?.id?? -1),
+        onSuccess: () => queryClient.invalidateQueries({queryKey: ['rooms']}),
+        onError: (erro : AxiosError<BackendError>) => {
+            const mensagemApi = erro.response?.data?.message || "Erro desconhecido";
+            toast.error("Erro ao autlizar diária: " + mensagemApi)
+        } 
+    })
+
+    const handleUpdateStay = () => {
+        
+        mutationUpdateStay.mutate()
+    }
+
+    const mutationCheckout = useMutation({
+        mutationFn : (stayId : number) => stayService.checkOut(stayId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ['rooms']})
+            toast.success("Sucesso ao realizar checkout")
+        },
+        onError: (erro : AxiosError<BackendError>) => {
+            const mensagemApi = erro.response?.data?.message || "Erro desconhecido";
+            toast.error("Erro ao realizar checkout: " + mensagemApi)
+        } 
+    })
+
+    const handleCheckout = (stayId : number) => {
+        mutationCheckout.mutate(stayId)
+    }
+
+    return { addDailyMutation, formatCurrency, roomStatus, roomStatusClasses, 
+        stayStatus, dailyPrice, handleUpdateStay, handleCheckout }
 }

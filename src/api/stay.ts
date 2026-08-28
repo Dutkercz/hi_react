@@ -9,6 +9,14 @@ export const stayService = {
     addPaymentAmout : async (id : number, ammout : StayPayment) => {
         const response = await axiosService.patch(`/stays/${id}/add-payment-amount`, ammout)
         return response.data
+    },
+    updateStay : async (id : number) => {
+        const response = await axiosService.patch(`/stays/update-daily-rates/${id}`)
+        return response.data
+    },
+    checkOut: async (id : number) => {
+        const response = await axiosService.patch(`/stays/checkout/${id}`)
+        return response.data
     }
     
 }
@@ -24,5 +32,11 @@ export type StayRequest = {
     checkOut: string
     totalGuests : number
     isPaid: boolean
+    payment? : Payment
     stayGuests : StayGuest[]
+}
+
+export type Payment = {
+    method: 'PIX' | 'CREDIT_CARD' | 'DEBIT_CARD' | 'CASH'
+    amount: number
 }

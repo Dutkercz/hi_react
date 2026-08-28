@@ -10,7 +10,7 @@ export const NavBar = () => {
     return (
         <div className="flex h-18 items-center justify-center bg-primary">
             <div className='ml-auto p-2'>
-                    <h1>Hotel Itaipu</h1>
+                    <h1>Hotel</h1>
             </div>
             <NavigationMenu className="w-full max-w-none justify-start">
                 <NavigationMenuList>

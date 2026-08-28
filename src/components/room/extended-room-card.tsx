@@ -1,4 +1,4 @@
-import { BedDoubleIcon, BedIcon, CreditCardIcon, UserRoundIcon } from 'lucide-react'
+import { BedDoubleIcon, BedIcon, CreditCardIcon, RefreshCcw, UserRoundIcon } from 'lucide-react'
 import { Button } from '../ui/button'
 import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from '../ui/card'
 import { type RoomResponse } from '@/api/room'
@@ -7,6 +7,8 @@ import { useState } from 'react'
 import ManageStay from '../stay/manage-stay-dialog'
 import { useRoomCard } from './useRoomCard'
 import AddPaymentDialog from '../payment/add-payment-dialog'
+import { AlertDialogModal } from '../alert/alert'
+import { AlertDialog } from '../ui/alert-dialog'
 
 type RoomCardProps = {
     room: RoomResponse
@@ -18,10 +20,10 @@ const RoomCard = ({ room }: RoomCardProps) => {
     const stay = room.stay
     const [open, setOpen] = useState(false)
     const [openAddPay, setOpenAddPay] = useState(false)
+    const [alertOpen, setAlertOpen] = useState(false)
 
-    const { addDailyMutation, formatCurrency, dailyPrice,
-        roomStatus, roomStatusClasses, stayStatus } = useRoomCard(room)
-
+    const { addDailyMutation, formatCurrency, dailyPrice, roomStatus,
+        roomStatusClasses, stayStatus, handleUpdateStay, handleCheckout } = useRoomCard(room)  
 
     return (
 
@@ -71,7 +73,13 @@ const RoomCard = ({ room }: RoomCardProps) => {
                             </div>
                             <div>
                                 <p className='text-xs text-muted-foreground'>Diárias</p>
-                                <p className='font-medium'>{stay.dailyRates}</p>
+                                <div className='flex items-center gap-2'>
+                                    <p className='font-medium'>{stay.dailyRates}</p>
+                                    
+                                    <Button onClick={handleUpdateStay} size="icon" variant="ghost">
+                                        <RefreshCcw />
+                                    </Button>
+                                </div>
                             </div>
                             <div>
                                 <p className='text-xs text-muted-foreground'>Check-in</p>
@@ -112,10 +120,10 @@ const RoomCard = ({ room }: RoomCardProps) => {
                             </Dialog>
 
                         </div>
-                        <div className='flex min-w-0 flex-col rounded-lg border border-border/70 bg-muted p-2'>
-                            <p className='text-xs text-muted-foreground'>A pagar</p>
+                        <div className={`flex min-w-0 flex-col rounded-lg border border-border/70  p-2 ${stay.remainingPrice >= 0 ? 'bg-muted' : 'bg-one-green'}`}>
+                            <p className='text-xs text-muted-foreground'>{stay.remainingPrice > 0 ? "A pagar" : "Crédito Cliente" }</p>
                             <p className='font-semibold'>
-                                {formatCurrency(stay?.remainingPrice)}
+                                {formatCurrency(stay?.remainingPrice >= 0 ? stay?.remainingPrice : stay?.remainingPrice * -1)}
                             </p>
                             <Button className='mt-2 w-full' size='sm' variant='outline' disabled>
                                 <CreditCardIcon /> Cobrar
@@ -143,21 +151,35 @@ const RoomCard = ({ room }: RoomCardProps) => {
                 }
                 <CardAction className='w-full flex justify-center'>
                     <div className='flex w-full flex-col items-stretch justify-center gap-2 sm:flex-row'>
-                        {room.stay &&
-                            <Button className="flex-1" onClick={() => addDailyMutation.mutate()}>
-                                Adicionar diária
-                            </Button>
+                        {room.stay ?
+                            <div className="flex w-full gap-1">
+                                <Button className="flex-1" onClick={() => addDailyMutation.mutate()}>
+                                    Adicionar diária
+                                </Button>
+                                <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
+                                    <DialogTrigger render={
+                                        <Button className="flex-1" variant="destructive"
+                                        >
+                                            Check-out
+                                        </Button>
+                                    } />
+                                    <AlertDialogModal isOpen={setAlertOpen} id={stay?.id} onConfirm={handleCheckout} title='Checkout'
+                                        message={`Realizar checkout do Apartamento ${room.roomNumber}`} />
+                                </AlertDialog>
+                            </div>
+                            :
+                            <Dialog open={open} onOpenChange={setOpen}>
+                                <DialogTrigger className="flex-1 flex" render={
+                                    <Button className="w-full"
+                                        onClick={() => setOpen(true)}>
+                                        Check-in
+                                    </Button>}>
+                                </DialogTrigger>
+                                <ManageStay room={room} setOpen={setOpen} />
+                            </Dialog>
                         }
 
-                        <Dialog open={open} onOpenChange={setOpen}>
-                            <DialogTrigger className="flex-1 flex" render={
-                                <Button className="w-full"
-                                    onClick={() => setOpen(true)} variant={room.status === 'AVAILABLE' ? 'default' : 'destructive'}>
-                                    {room.status === 'AVAILABLE' ? 'Check-in' : 'Check-out'}
-                                </Button>}>
-                            </DialogTrigger>
-                            <ManageStay room={room} setOpen={setOpen} />
-                        </Dialog>
+
                     </div>
                 </CardAction>
             </CardFooter>

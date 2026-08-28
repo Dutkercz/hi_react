@@ -34,6 +34,7 @@ export type StayResponse = {
     paidPrice: number
     remainingPrice: number
     totalPrice: number
+    isPaid: boolean
     stayStatus: 'CURRENT' | 'CANCELED' | 'FINISHED'
 }
 

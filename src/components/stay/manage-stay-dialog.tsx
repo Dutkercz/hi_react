@@ -205,7 +205,6 @@ const ManageStay = ({ setOpen, room }: ManageRoomProps) => {
                                 </div>
                             )}
                         />
-
                     </Field>
 
                     <Controller
