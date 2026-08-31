@@ -49,7 +49,7 @@ const data = {
     },
     {
       title: "Get Help",
-      url: "#",
+      url: "/help-page",
       icon: (
         <CircleHelpIcon
         />

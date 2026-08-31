@@ -1,3 +1,4 @@
+
 export const useFormatCurrency = () => {
     const format = (value: number | null | undefined) => {
         if (typeof value !== 'number') return '—'

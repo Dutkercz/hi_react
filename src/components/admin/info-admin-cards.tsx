@@ -10,74 +10,46 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { useFormatCurrency } from "@/hooks/use-formart-currency"
-import { axiosService } from "@/lib/axios"
-import { TrendingUpIcon, TrendingDownIcon } from "lucide-react"
-import { useState, useEffect } from "react"
+import { TrendingUpIcon } from "lucide-react"
+import { useAdmin } from "./useAdmin"
+import { Spinner } from "../ui/spinner"
 
 export function SectionCards() {
 
-   const [data, setData] = useState<number>(0)
-  
-      useEffect(() => {
-          const fetchData = async () => {
-              const response = await axiosService.get("/admin/month-resume?year=2026&month=8")
-              setData(() => response.data)
-  
-          }
-          fetchData()
-  
-      }, [])
+  const year = new Date().getFullYear()
+  const month = new Date().getMonth() + 1
+  const { data, isLoading, isError } = useAdmin(year, month)
 
-      const formart = useFormatCurrency()
+  const formart = useFormatCurrency()
 
+  if(isLoading) return <Spinner/>
+  if(isError) return <><h1>Erro</h1></>
+
+  const totalMonthProfit = data?.totalMonthProfit 
 
   return (
-    <div className="grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4 dark:*:data-[slot=card]:bg-card">
+    <div className="grid grid-cols-1 gap-3 px-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-3 dark:*:data-[slot=card]:bg-card">
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Total em diária</CardDescription>
+          <CardDescription>Total de diárias em {month}/{year}</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {formart(data)}
+          {formart(totalMonthProfit)}
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
               <TrendingUpIcon
               />
-              +12.5%
+              Show up %
             </Badge>
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Trending up this month{" "}
+            numero a + de valor em diárias{" "}
             <TrendingUpIcon className="size-4" />
           </div>
           <div className="text-muted-foreground">
-            Visitors for the last 6 months
-          </div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>New Customers</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            1,234
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <TrendingDownIcon
-              />
-              -20%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Down 20% this period{" "}
-            <TrendingDownIcon className="size-4" />
-          </div>
-          <div className="text-muted-foreground">
-            Acquisition needs attention
+            em relação a mes x
           </div>
         </CardFooter>
       </Card>

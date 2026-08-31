@@ -30,17 +30,17 @@ const OccupationPage = () => {
 
                 <div className="flex items-center gap-3 text-xs text-muted-foreground">
                     <div className="flex items-center gap-2">
-                        <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                        <span className="h-2.5 w-2.5 rounded-full bg-chart-1" />
                         Disponível
                     </div>
                     <div className="flex items-center gap-2">
-                        <span className="h-2.5 w-2.5 rounded-full bg-rose-500" />
+                        <span className="h-2.5 w-2.5 rounded-full bg-destructive" />
                         Ocupado
                     </div>
                 </div>
             </div>
 
-            <div className="overflow-x-auto rounded-xl border border-border/70 bg-background/70">
+            <div className="overflow-x-auto rounded-md border bg-background/70">
                 <div className="min-w-215">
                     <div
                         className="grid border-b border-border/70 bg-muted/70 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
@@ -48,7 +48,7 @@ const OccupationPage = () => {
                     >
                         <div className="border-r border-border/70 px-3 py-2">Quarto</div>
                         {days.map((day) => (
-                            <div key={day} className="border-r border-border/70 px-2 py-2 text-center last:border-r-0">
+                            <div key={day} className="border-r border-border/70  px-2 py-2 text-center last:border-r-0">
                                 {day}
                             </div>
                         ))}
@@ -71,10 +71,10 @@ const OccupationPage = () => {
                                 return (
                                     <div
                                         key={`${room}-${day}`}
-                                        className={`flex items-center justify-center border-r border-t border-border/70 p-1 last:border-r-0 ${isOccupied && today === day? 'bg-rose-50 text-rose-700' : 'bg-emerald-50 text-emerald-700'
+                                        className={`flex items-center bg-muted justify-center border-r border-t border-border/70 p-1 last:border-r-0 ${isOccupied && today === day?  'text-destructive' : 'text-chart-1'
                                             }`}
                                     >
-                                        <div className={`flex h-7 w-7 items-center justify-center rounded-md text-[11px] ${isOccupied && today === day? 'bg-rose-100' : 'bg-emerald-100'
+                                        <div className={`flex h-7 w-7 items-center justify-center rounded-md text-[11px] '
                                             } ${day === today ? 'font-extrabold' : 'font-light'}`}>
                                             {day}
                                         </div>

@@ -7,6 +7,7 @@ import RegisterPage from "./pages/register-page"
 import AdminPage from "./pages/admin-page"
 import { SidebarInset, SidebarProvider } from "./components/ui/sidebar"
 import { AppSidebar } from "./components/sidebar/app-sidebar"
+import HelpPage from "./pages/help-page"
 
 const client = new QueryClient()
 
@@ -32,6 +33,7 @@ const App = () => {
               <Route path="/bookings" element={<OccupationPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/admin" element={<AdminPage />} />
+              <Route path="/help-page" element={<HelpPage />} />
             </Routes>
           </div>
         </SidebarInset>
