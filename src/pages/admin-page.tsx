@@ -1,47 +1,24 @@
-import { Card, CardContent, CardTitle } from '@/components/ui/card'
-import { SidebarProvider } from '@/components/ui/sidebar'
-import { axiosService } from '@/lib/axios'
-import React, { useEffect, useState } from 'react'
+import { ChartAreaInteractive } from '@/components/chart-area-interactive'
+import { SectionCards } from '@/components/section-cards'
+import { SiteHeader } from '@/components/site-header'
 
 
 const AdminPage = () => {
-
-    const [data, setData] = useState<number>(0)
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await axiosService.get("/admin/month-resume?year=2026&month=8")
-            setData(() => response.data)
-
-        }
-        fetchData()
-
-    }, [])
-
-
-  return (
-    <div>
-         <SidebarProvider
-      style={
-        {
-          "--sidebar-width": "calc(var(--spacing) * 72)",
-          "--header-height": "calc(var(--spacing) * 12)",
-        } as React.CSSProperties
-      }
-    ></SidebarProvider>
-        <Card>
-            <CardTitle>Total em diária do mes</CardTitle>
-            <div>
-                <CardContent>
-                    <div>
-                        <p>Valor acumulado no mes: {data.toFixed(2)}</p>
-
+    return (
+        <div>
+            <SiteHeader />
+            <div className="flex flex-1 flex-col">
+                <div className="@container/main flex flex-1 flex-col gap-2">
+                    <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+                        <SectionCards />
+                        <div className="px-4 lg:px-6">
+                            <ChartAreaInteractive />
+                        </div>
                     </div>
-                </CardContent>
+                </div>
             </div>
-        </Card>
-    </div>
-  )
+        </div>
+    )
 }
 
 export default AdminPage

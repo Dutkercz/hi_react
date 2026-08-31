@@ -1,5 +1,6 @@
 import { roomService, type RoomResponse } from "@/api/room"
 import { stayService } from "@/api/stay"
+import { useFormatCurrency } from "@/hooks/use-formart-currency"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import type { AxiosError } from "axios"
 import { toast } from "sonner"
@@ -24,13 +25,7 @@ export const useRoomCard = (room: RoomResponse) => {
         } 
     })
 
-    const formatCurrency = (value: number | null | undefined) => {
-        if (typeof value !== 'number') return '—'
-        return new Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: 'BRL',
-        }).format(value)
-    }
+    const formatCurrency = useFormatCurrency()
 
     const dailyPrice = {
         1: 160.00,
