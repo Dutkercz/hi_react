@@ -17,6 +17,10 @@ export const stayService = {
     checkOut: async (id : number) => {
         const response = await axiosService.patch(`/stays/checkout/${id}`)
         return response.data
+    },
+    monthlyStatusBoard: async () => {
+        const response = await axiosService.get<MonthlyOccupation[]>(`/stays/monthly-occupation`)
+        return response.data
     }
     
 }
@@ -39,4 +43,10 @@ export type StayRequest = {
 export type Payment = {
     method: 'PIX' | 'CREDIT_CARD' | 'DEBIT_CARD' | 'CASH'
     amount: number
+}
+
+export type MonthlyOccupation = {
+    roomNumber : string
+    checkIn : string
+    checkOut : string
 }
