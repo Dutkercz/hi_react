@@ -43,7 +43,9 @@ const OccupationPage = () => {
     monthOccupation?.forEach((stay) => {
         const roomKey = String(stay.roomNumber)
         const start = new Date(stay.checkIn)
+       
         const end = new Date(stay.checkOut)
+        end.setDate(end.getDate() - 1);
 
         if (start > monthEnd || end < monthStart) {
             return
