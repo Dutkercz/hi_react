@@ -1,8 +1,33 @@
 import { roomService } from "@/api/room";
 import { stayService } from "@/api/stay";
+import { Input } from "@base-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import { useState, type BaseSyntheticEvent } from "react";
 
 const OccupationPage = () => {
+
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth() + 1;
+    const [selectedDate, setSelectedDate] = useState<string>(
+        `${currentYear}-${String(currentMonth).padStart(2, "0")}`
+    )
+    const [selectedMonth, setSelectedMonth] = useState<number>(currentMonth)
+    const [selectedYear, setSelectedYear] = useState<number>(currentYear)
+    const monthStart = new Date(selectedYear, selectedMonth - 1, 1)
+    const monthEnd = new Date(selectedYear, selectedMonth, 0, 23, 59, 59, 999)
+    const occupiedDaysByRoom = new Map<string, Set<number>>()
+
+    const handleChangeDate = (e: BaseSyntheticEvent) => {
+        const inputValue = e.target.value;
+        setSelectedDate(inputValue);
+        if (inputValue) {
+            const [year, month] = inputValue.split("-").map(Number)
+            setSelectedMonth(month)
+            setSelectedYear(year)
+        }
+
+    }
 
     const { data: rooms } = useQuery({
         queryKey: ["rooms"],
@@ -10,16 +35,10 @@ const OccupationPage = () => {
     })
 
     const { data: monthOccupation } = useQuery({
-        queryKey: ["rooms-status"],
-        queryFn: () => stayService.monthlyStatusBoard()
+        queryKey: ["rooms-status", selectedYear, selectedMonth],
+        queryFn: () => stayService.monthlyStatusBoard(selectedYear, selectedMonth),
+
     })
-
-    const ano = new Date().getFullYear();
-    const mes = new Date().getMonth() +1;
-    const monthStart = new Date(ano, mes - 1, 1)
-    const monthEnd = new Date(ano, mes, 0, 23, 59, 59, 999)
-
-    const occupiedDaysByRoom = new Map<string, Set<number>>()
 
     monthOccupation?.forEach((stay) => {
         const roomKey = String(stay.roomNumber)
@@ -47,34 +66,43 @@ const OccupationPage = () => {
         }
     })
 
-    const totalDias = new Date(ano, mes, 0).getDate();
+    const totalDias = new Date(selectedYear, selectedMonth, 0).getDate();
     const days = Array.from({ length: totalDias }, (_, i) => i + 1);
     const monthLabel = new Intl.DateTimeFormat('pt-BR', {
         month: 'long',
         year: 'numeric',
-    }).format(new Date(ano, mes - 1, 1));
+    }).format(new Date(selectedYear, selectedMonth - 1, 1));
 
     return (
-        <div className="flex h-full flex-col gap-4 rounded-2xl border border-border/70 bg-card/80 p-4 shadow-sm">
+        <div className="flex m-1 h-full flex-col gap-4 rounded-2xl border border-border/70 bg-card/80 p-4 shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-3">
 
-                <div>
-                    <h2 className="text-lg font-semibold text-foreground">Tabela de hospedagem</h2>
-                    <p className="text-sm text-muted-foreground">
-                        Visualização da ocupação por quarto e dia em {monthLabel}
-                    </p>
+                <div className="flex items-center justify-center p-2 gap-4">
+                    <div className="flex-3">
+                        <h2 className="text-lg font-semibold text-foreground">Tabela de hospedagem</h2>
+                        <p className="text-sm text-muted-foreground">
+                            Visualização da ocupação por quarto e dia em {monthLabel}
+                        </p>
+                    </div>
+
+                    <div className="flex-1">
+                        <Input className="border-2 rounded-lg bg-muted p-2" type="month"
+                            value={selectedDate} onChange={handleChangeDate}
+                        />
+                    </div>
+
+                    <div className="flex flex-1 gap-3 text-xs text-muted-foreground">
+                        <div className="flex items-center gap-2">
+                            <span className="h-2.5 w-2.5 rounded-full bg-chart-1" />
+                            Disponível
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="h-2.5 w-2.5 rounded-full bg-destructive" />
+                            Ocupado
+                        </div>
+                    </div>
                 </div>
 
-                <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                    <div className="flex items-center gap-2">
-                        <span className="h-2.5 w-2.5 rounded-full bg-chart-1" />
-                        Disponível
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <span className="h-2.5 w-2.5 rounded-full bg-destructive" />
-                        Ocupado
-                    </div>
-                </div>
             </div>
 
             <div className="overflow-x-auto rounded-md border bg-background/70">
@@ -106,7 +134,10 @@ const OccupationPage = () => {
                                 </div>
 
                                 {days.map((day) => {
-                                    const today = new Date().getDate()
+                                    const today = new Date()
+                                    const isToday = selectedYear === today.getFullYear()
+                                        && selectedMonth === today.getMonth() + 1
+                                        && day === today.getDate()
                                     const isOccupied = occupiedDays.has(day)
 
                                     return (
@@ -114,7 +145,7 @@ const OccupationPage = () => {
                                             key={`${room.id}-${day}`}
                                             className={`flex items-center justify-center border-r border-t border-border/70 p-1 last:border-r-0 ${isOccupied ? 'text-destructive' : 'text-chart-1'}`}
                                         >
-                                            <div className={`flex h-7 w-7 items-center justify-center rounded-md text-[11px] ${day === today ? 'font-extrabold' : 'font-light'}`}>
+                                            <div className={`flex h-7 w-7 items-center justify-center rounded-md text-[11px] ${isToday ? 'font-extrabold' : 'font-light'}`}>
                                                 {day}
                                             </div>
                                         </div>

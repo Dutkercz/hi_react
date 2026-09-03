@@ -1,7 +1,7 @@
 import * as React from "react"
 
-import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
+import { NavMain } from "@/components/sidebar/nav-main"
+import { NavSecondary } from "@/components/sidebar/nav-secondary"
 import {
   Sidebar,
   SidebarContent, SidebarHeader,
@@ -14,7 +14,7 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/",
+      url: "/dashboard",
       icon: <LayoutDashboardIcon />,
     },
     {

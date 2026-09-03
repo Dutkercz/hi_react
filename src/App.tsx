@@ -4,10 +4,12 @@ import { Route, Routes } from "react-router-dom"
 import { Toaster } from "sonner"
 import OccupationPage from "./pages/occupation-page"
 import RegisterPage from "./pages/register-page"
-import AdminPage from "./pages/admin-page"
+import DashboardPage from "./pages/dashboard-page"
 import { SidebarInset, SidebarProvider } from "./components/ui/sidebar"
 import { AppSidebar } from "./components/sidebar/app-sidebar"
 import HelpPage from "./pages/help-page"
+import AdminPage from "./pages/admin-page"
+import { ProtectedAdminRoute } from "./components/admin/admin-route"
 
 const client = new QueryClient()
 
@@ -32,7 +34,11 @@ const App = () => {
               <Route path="/" element={<HomePage />} />
               <Route path="/bookings" element={<OccupationPage />} />
               <Route path="/register" element={<RegisterPage />} />
-              <Route path="/admin" element={<AdminPage />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/admin" element={
+                <ProtectedAdminRoute>
+                  <AdminPage />
+                </ProtectedAdminRoute>} />
               <Route path="/help-page" element={<HelpPage />} />
             </Routes>
           </div>

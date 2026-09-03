@@ -18,8 +18,8 @@ export const stayService = {
         const response = await axiosService.patch(`/stays/checkout/${id}`)
         return response.data
     },
-    monthlyStatusBoard: async () => {
-        const response = await axiosService.get<MonthlyOccupation[]>(`/stays/monthly-occupation`)
+    monthlyStatusBoard: async (year? : number, month?: number ) => {
+        const response = await axiosService.get<MonthlyOccupation[]>(`/stays/monthly-occupation?year=${year}&month=${month}`)
         return response.data
     }
     
