@@ -18,7 +18,7 @@ const OccupationPage = () => {
     const monthStart = new Date(selectedYear, selectedMonth - 1, 1)
     const monthEnd = new Date(selectedYear, selectedMonth, 0, 23, 59, 59, 999)
     const occupiedDaysByRoom = new Map<string, Set<number>>()
-    const clientNames = new Map<number, string>()
+    const clientNamesByRoomAndDay = new Map<string, Map<number, string>>()
 
     const handleChangeDate = (e: BaseSyntheticEvent) => {
         const inputValue = e.target.value;
@@ -46,7 +46,7 @@ const OccupationPage = () => {
         const roomKey = String(stay.roomNumber)
         const start = new Date(stay.checkIn)
 
-        clientNames.set(Number(stay.roomNumber), stay.clientName)
+
 
         const end = new Date(stay.checkOut)
         end.setDate(end.getDate() - 1);
@@ -65,9 +65,13 @@ const OccupationPage = () => {
         if (!occupiedDaysByRoom.has(roomKey)) {
             occupiedDaysByRoom.set(roomKey, new Set())
         }
+        if (!clientNamesByRoomAndDay.has(roomKey)) {
+            clientNamesByRoomAndDay.set(roomKey, new Map())
+        }
 
         while (current <= iterationEnd) {
             occupiedDaysByRoom.get(roomKey)?.add(current.getDate())
+            clientNamesByRoomAndDay.get(roomKey)?.set(current.getDate(), stay.clientName)
             current.setDate(current.getDate() + 1)
         }
     })
@@ -128,6 +132,7 @@ const OccupationPage = () => {
                     {rooms?.map((room) => {
                         const roomNumber = String(room.roomNumber)
                         const occupiedDays = occupiedDaysByRoom.get(roomNumber) ?? new Set<number>()
+                        const clientNamesByDay = clientNamesByRoomAndDay.get(roomNumber) ?? new Map<number, string>()
 
                         return (
                             <div
@@ -151,10 +156,10 @@ const OccupationPage = () => {
                                             key={`${room.id}-${day}`}
                                             className={`flex items-center justify-center border-r border-t border-border/70 p-1 last:border-r-0 ${isOccupied ? 'text-destructive' : 'text-chart-1'}`}
                                         >
-                                            <div className={`flex h-7 w-7 items-center justify-center rounded-md text-[11px] ${isToday ? 'font-extrabold' : 'font-light'}`}>                                                
-                                                <TooltipComponent 
-                                                hover={day} 
-                                                tooltipContent={clientNames.get(Number(room.roomNumber))?? "Livre" } />
+                                            <div className={`flex h-7 w-7 items-center justify-center rounded-md text-[11px] ${isToday ? 'font-extrabold' : 'font-light'}`}>
+                                                <TooltipComponent
+                                                    hover={day}
+                                                    tooltipContent={isOccupied ? clientNamesByDay.get(day) ?? "Cliente não informado" : "Livre"} />
                                             </div>
                                         </div>
                                     );
