@@ -115,7 +115,7 @@ const OccupationPage = () => {
 
             </div>
 
-            <div className="overflow-x-auto rounded-md border bg-background/70">
+            <div className="overflow-x-hidden rounded-lg border bg-background/70">
                 <div className="min-w-215">
                     <div
                         className="grid border-b border-border/70 bg-muted/70 text-xs font-semibold uppercase tracking-wide text-muted-foreground"

@@ -29,7 +29,7 @@ const HomePage = () => {
     if (isLoading) return <><SpinnerComp /></>
 
     return (
-        <Card className='min-h-screen'>
+        <Card className='min-h-screen bg-background'>
             <div className='mx-auto'>
                 <CardHeader className='mb-4'>
                     <CardTitle className='text-xl text-center'>Visão geral</CardTitle>

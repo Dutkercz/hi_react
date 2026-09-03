@@ -69,10 +69,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar
       collapsible="offcanvas"
-      className="h-screen border-r bg-sidebar"
+      className="h-screen w-60 border-r bg-muted"
       {...props}
     >
-      <SidebarHeader className="border-b border-sidebar-border/80">
+      <SidebarHeader className="border-b bg-a border-sidebar-border/80">
         <SidebarMenu>
           <SidebarMenuItem>
             <div className="flex items-center gap-2 p-2">
