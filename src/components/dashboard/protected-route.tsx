@@ -1,10 +1,10 @@
 import type { ReactNode } from "react"
 
 type ProtectedAdminRouteProps = {
-    children : ReactNode
+    children: ReactNode
 }
 
-export const ProtectedAdminRoute = ({children} : ProtectedAdminRouteProps) => {
+export const ProtectedRoute = ({ children }: ProtectedAdminRouteProps) => {
     /* 
     const isAdmin = true
     

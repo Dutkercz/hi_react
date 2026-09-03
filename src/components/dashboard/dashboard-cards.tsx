@@ -11,21 +11,21 @@ import {
 } from "@/components/ui/card"
 import { useFormatCurrency } from "@/hooks/use-formart-currency"
 import { TrendingUpIcon } from "lucide-react"
-import { useAdmin } from "./useAdmin"
+import { useDashboard } from "./useDashboard"
 import { Spinner } from "../ui/spinner"
 
 export function SectionCards() {
 
   const year = new Date().getFullYear()
   const month = new Date().getMonth() + 1
-  const { data, isLoading, isError } = useAdmin(year, month)
+  const { data, isLoading, isError } = useDashboard(year, month)
 
   const formart = useFormatCurrency()
 
-  if(isLoading) return <Spinner/>
-  if(isError) return <><h1>Erro</h1></>
+  if (isLoading) return <Spinner />
+  if (isError) return <><h1>Erro</h1></>
 
-  const totalMonthProfit = data?.totalMonthProfit 
+  const totalMonthProfit = data?.totalMonthProfit
 
   return (
     <div className="grid grid-cols-1 gap-3 px-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-3 dark:*:data-[slot=card]:bg-card">
@@ -33,7 +33,7 @@ export function SectionCards() {
         <CardHeader>
           <CardDescription>Total de diárias em {month}/{year}</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-          {formart(totalMonthProfit)}
+            {formart(totalMonthProfit)}
           </CardTitle>
           <CardAction>
             <Badge variant="outline">

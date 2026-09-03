@@ -1,5 +1,5 @@
 import { ChartAreaInteractive } from '@/components/sidebar/chart-area-interactive'
-import { SectionCards } from '@/components/admin/info-admin-cards'
+import { SectionCards } from '@/components/dashboard/dashboard-cards'
 import { SiteHeader } from '@/components/sidebar/site-header'
 
 
