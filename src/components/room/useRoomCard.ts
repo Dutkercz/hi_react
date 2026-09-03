@@ -1,5 +1,5 @@
 import { roomService, type RoomResponse } from "@/api/room"
-import { stayService } from "@/api/stay"
+import { stayService, type RefundPayment } from "@/api/stay"
 import { useFormatCurrency } from "@/hooks/use-formart-currency"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import type { AxiosError } from "axios"
@@ -84,6 +84,22 @@ export const useRoomCard = (room: RoomResponse) => {
         mutationCheckout.mutate(stayId)
     }
 
+    const refundDailyAmountMutation = useMutation({
+        mutationFn : ({stayId, refundAmount} : {stayId : number, refundAmount: RefundPayment}) => 
+            stayService.refundAmount(stayId, refundAmount),
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ['rooms']})
+            toast.success("Sucesso ao realizar o reembolso")
+        },
+        onError: (erro : AxiosError<BackendError>) => {
+            const mensagemApi = erro.response?.data?.message || "Erro desconhecido";
+            toast.error("Erro ao realizar reembolso: " + mensagemApi)
+        } 
+    })
+    const handleRefundAmount = (stayId : number, refundAmount: RefundPayment) => {
+        refundDailyAmountMutation.mutate({stayId, refundAmount})
+    }
+
     return { addDailyMutation, formatCurrency, roomStatus, roomStatusClasses, 
-        stayStatus, dailyPrice, handleUpdateStay, handleCheckout }
+        stayStatus, dailyPrice, handleUpdateStay, handleCheckout, handleRefundAmount }
 }

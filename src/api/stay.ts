@@ -21,11 +21,18 @@ export const stayService = {
     monthlyStatusBoard: async (year? : number, month?: number ) => {
         const response = await axiosService.get<MonthlyOccupation[]>(`/stays/monthly-occupation?year=${year}&month=${month}`)
         return response.data
+    },
+    refundAmount: async (id : number, refundAmount: RefundPayment ) => {
+        const response = await axiosService.patch(`/stays/refund/${id}`, refundAmount)
+        return response.data
     }
-    
 }
 
 type StayPayment = {
+    amount : number
+}
+
+export type RefundPayment = {
     amount : number
 }
 

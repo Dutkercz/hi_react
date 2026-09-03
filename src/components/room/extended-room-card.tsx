@@ -1,4 +1,4 @@
-import { BedDoubleIcon, BedIcon, CreditCardIcon, RefreshCcw, UserRoundIcon } from 'lucide-react'
+import { BanknoteArrowDown, BedDoubleIcon, BedIcon, CreditCardIcon, RefreshCcw, UserRoundIcon } from 'lucide-react'
 import { Button } from '../ui/button'
 import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from '../ui/card'
 import { type RoomResponse } from '@/api/room'
@@ -23,7 +23,7 @@ const RoomCard = ({ room }: RoomCardProps) => {
     const [alertOpen, setAlertOpen] = useState(false)
 
     const { addDailyMutation, formatCurrency, dailyPrice, roomStatus,
-        roomStatusClasses, stayStatus, handleUpdateStay, handleCheckout } = useRoomCard(room)  
+        roomStatusClasses, stayStatus, handleUpdateStay, handleCheckout, handleRefundAmount } = useRoomCard(room)  
 
     return (
 
@@ -112,7 +112,7 @@ const RoomCard = ({ room }: RoomCardProps) => {
                             </p>
 
                             <Dialog open={openAddPay} onOpenChange={setOpenAddPay}>
-                                <DialogTrigger className="flex-1 flex" render={<Button className='mt-2 w-full' size='sm' variant='outline'>
+                                <DialogTrigger className="flex-1 flex mt-3" render={<Button className='mt-2 w-full' size='sm' variant='outline'>
                                     <CreditCardIcon /> Registrar
                                 </Button>}>
                                 </DialogTrigger>
@@ -125,9 +125,11 @@ const RoomCard = ({ room }: RoomCardProps) => {
                             <p className='font-semibold'>
                                 {formatCurrency(stay?.remainingPrice >= 0 ? stay?.remainingPrice : stay?.remainingPrice * -1)}
                             </p>
-                            <Button className='mt-2 w-full' size='sm' variant='outline' disabled>
-                                <CreditCardIcon /> Cobrar
+                            {stay?.remainingPrice * -1 > 0 && 
+                            <Button onClick={() => handleRefundAmount(stay.id, {amount: stay.remainingPrice * -1})} className='mt-3 w-full' size='sm' variant='outline'>
+                                <BanknoteArrowDown /> Devolver valor
                             </Button>
+                            }
                         </div>
                         <div className='rounded-lg border border-border/70 bg-muted p-2'>
                             <p className='text-xs text-muted-foreground'>Total</p>
