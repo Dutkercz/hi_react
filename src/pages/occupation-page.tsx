@@ -1,5 +1,6 @@
 import { roomService } from "@/api/room";
 import { stayService } from "@/api/stay";
+import TooltipComponent from "@/components/tooltip/tooltip-component";
 import { Input } from "@base-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useState, type BaseSyntheticEvent } from "react";
@@ -17,6 +18,7 @@ const OccupationPage = () => {
     const monthStart = new Date(selectedYear, selectedMonth - 1, 1)
     const monthEnd = new Date(selectedYear, selectedMonth, 0, 23, 59, 59, 999)
     const occupiedDaysByRoom = new Map<string, Set<number>>()
+    const clientNames = new Map<number, string>()
 
     const handleChangeDate = (e: BaseSyntheticEvent) => {
         const inputValue = e.target.value;
@@ -43,7 +45,9 @@ const OccupationPage = () => {
     monthOccupation?.forEach((stay) => {
         const roomKey = String(stay.roomNumber)
         const start = new Date(stay.checkIn)
-       
+
+        clientNames.set(Number(stay.roomNumber), stay.clientName)
+
         const end = new Date(stay.checkOut)
         end.setDate(end.getDate() - 1);
 
@@ -147,8 +151,10 @@ const OccupationPage = () => {
                                             key={`${room.id}-${day}`}
                                             className={`flex items-center justify-center border-r border-t border-border/70 p-1 last:border-r-0 ${isOccupied ? 'text-destructive' : 'text-chart-1'}`}
                                         >
-                                            <div className={`flex h-7 w-7 items-center justify-center rounded-md text-[11px] ${isToday ? 'font-extrabold' : 'font-light'}`}>
-                                                {day}
+                                            <div className={`flex h-7 w-7 items-center justify-center rounded-md text-[11px] ${isToday ? 'font-extrabold' : 'font-light'}`}>                                                
+                                                <TooltipComponent 
+                                                hover={day} 
+                                                tooltipContent={clientNames.get(Number(room.roomNumber))?? "Livre" } />
                                             </div>
                                         </div>
                                     );

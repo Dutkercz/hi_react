@@ -49,4 +49,5 @@ export type MonthlyOccupation = {
     roomNumber : string
     checkIn : string
     checkOut : string
+    clientName : string
 }

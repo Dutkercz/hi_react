@@ -16,6 +16,7 @@ const client = new QueryClient()
 const App = () => {
   return (
     <QueryClientProvider client={client}>
+      
       <SidebarProvider
         style={
           {
