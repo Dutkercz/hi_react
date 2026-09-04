@@ -47,7 +47,7 @@ const AdminRoomCard = ({ room, onSubmit }: AdminRoomCardType) => {
                     />
                 </div>
 
-                <Separator orientation="vertical" className="ml-5" />
+                <Separator orientation="vertical" className="mr-5" />
 
                 <div className="flex flex-col items-center justify-center">
                     <label htmlFor="doubleBeds">Cama de casal</label>

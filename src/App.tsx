@@ -10,6 +10,7 @@ import { AppSidebar } from "./components/sidebar/app-sidebar"
 import HelpPage from "./pages/help-page"
 import AdminPage from "./pages/admin-page"
 import { ProtectedRoute } from "./components/dashboard/protected-route"
+import AdminRoom from "./components/admin/admin-room"
 
 const client = new QueryClient()
 
@@ -36,10 +37,16 @@ const App = () => {
               <Route path="/bookings" element={<OccupationPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
+
               <Route path="/admin" element={
                 <ProtectedRoute>
                   <AdminPage />
-                </ProtectedRoute>} />
+                </ProtectedRoute>} 
+                  children={
+                    <Route path="/admin/rooms" element={<AdminRoom/>} />
+                  }
+                />
+                
               <Route path="/help-page" element={<HelpPage />} />
             </Routes>
           </div>

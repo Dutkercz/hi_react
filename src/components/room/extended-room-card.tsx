@@ -1,4 +1,4 @@
-import { BanknoteArrowDown, BedDoubleIcon, BedIcon, CreditCardIcon, RefreshCcw, UserRoundIcon } from 'lucide-react'
+import { BanknoteArrowDown, BedDoubleIcon, BedSingle, CreditCardIcon, RefreshCcw, UserRoundIcon } from 'lucide-react'
 import { Button } from '../ui/button'
 import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from '../ui/card'
 import { type RoomResponse } from '@/api/room'
@@ -41,14 +41,14 @@ const RoomCard = ({ room }: RoomCardProps) => {
                 <div className='flex flex-wrap items-center justify-center gap-2'>
                     {room.singleBeds > 0 &&
                         <div className='flex items-center justify-center gap-2 rounded-lg bg-muted/60 p-2'>
-                            <BedIcon className='size-4' />
+                            <BedSingle className='size-5' />
                             <p className='text-center text-muted-foreground font-medium'>
                                 Cama solteiro <span className='font-extrabold'>{room.singleBeds}</span>
                             </p>
                         </div>
                     }
                     <div className='rounded-lg bg-muted/60 p-2 flex items-center justify-center gap-2'>
-                        <BedDoubleIcon className='size-4' />
+                        <BedDoubleIcon className='size-5' />
                         <p className='text-center text-muted-foreground font-medium'>
                             Cama casal <span className='font-extrabold'>{room.doubleBeds}</span>
                         </p>
