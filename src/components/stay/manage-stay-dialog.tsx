@@ -183,7 +183,7 @@ const ManageStay = ({ setOpen, room }: ManageRoomProps) => {
                         <FieldContent className="text-sm text-muted-foreground">
                             {clientName || 'Nenhum cliente selecionado'}
                             {clientName &&
-                                <div>Diária <span>{formatCurrency(dailyPrice[totalGuests as keyof typeof dailyPrice])}</span></div>
+                                <div>Diária <span>{formatCurrency(dailyPrice[totalGuests as keyof typeof dailyPrice] ?? 0)}</span></div>
                             }
                         </FieldContent>
 

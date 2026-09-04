@@ -180,8 +180,6 @@ const RoomCard = ({ room }: RoomCardProps) => {
                                 <ManageStay room={room} setOpen={setOpen} />
                             </Dialog>
                         }
-
-
                     </div>
                 </CardAction>
             </CardFooter>

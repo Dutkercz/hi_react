@@ -1,7 +1,8 @@
+import { adminService } from "@/api/admin"
 import { roomService, type RoomResponse } from "@/api/room"
 import { stayService, type RefundPayment } from "@/api/stay"
 import { useFormatCurrency } from "@/hooks/use-formart-currency"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import type { AxiosError } from "axios"
 import { toast } from "sonner"
 
@@ -25,14 +26,20 @@ export const useRoomCard = (room: RoomResponse) => {
         } 
     })
 
-    const formatCurrency = useFormatCurrency()
-
+    
+    const {data : lastDailyPrice} = useQuery({
+        queryKey: ["daily-prices"],
+        queryFn: () => adminService.getDailyPrices(),
+    })
+    
     const dailyPrice = {
-        1: 160.00,
-        2: 260.00,
-        3: 390.00,
-        4: 490.00
+        1: lastDailyPrice?.oneGuestPrice,
+        2: lastDailyPrice?.twoGuestPrice,
+        3: lastDailyPrice?.threeGuestPrice,
+        4: lastDailyPrice?.fourGuestPrice
     }
+
+    const formatCurrency = useFormatCurrency()
 
     const roomStatus = {
         AVAILABLE: 'Disponível',
