@@ -1,17 +1,37 @@
-import { roomService } from "@/api/room"
+import { roomService, type RoomUpdateRequest } from "@/api/room"
+import AdminRoomCard from "@/components/admin/admin-room-card"
+import type { BackendError } from "@/components/error/types"
 import SpinnerComp from "@/components/spinner/spiner"
-import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import type { AxiosError } from "axios"
+import { toast } from "sonner"
 
 const AdminPage = () => {
+    const queryClient = useQueryClient()
 
     const { data: rooms, isLoading, isError } = useQuery({
         queryKey: ["rooms"],
         queryFn: () => roomService.getAll()
     })
+
+    const updateRoomConfigMutation = useMutation({
+        mutationFn: ({ id, room }: { id: number, room: RoomUpdateRequest }) => {
+            return roomService.updateRoomConfig(id, room)
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['rooms'] })
+            toast.success("Sucesso ao realizar o reembolso")
+        },
+        onError: (erro: AxiosError<BackendError>) => {
+            const mensagemApi = erro.response?.data?.message || "Erro desconhecido";
+            toast.error("Erro ao realizar reembolso: " + mensagemApi)
+        }
+    })
+
+    const handleSubmitEdit = ( id: number, room: RoomUpdateRequest ) => {
+        updateRoomConfigMutation.mutate({ id, room })
+    }
 
     if (isLoading) return <SpinnerComp />
     if (isError) return <div>Erro</div>
@@ -23,45 +43,7 @@ const AdminPage = () => {
             <div className="grid grid-cols-3 gap-2 m-2">
                 {rooms?.map((room) => (
                     <div key={room.id} className="p-2 border bg-muted rounded-lg">
-                        <div className="flex-col m-1">
-                            <p className="text-center">Apartamento </p>
-                            <span 
-                            className="flex justify-center text-muted-foreground p-0.5 text-xl">
-                                {room.roomNumber}
-                            </span>
-                        </div>
-                        <Separator />
-                        <div className="flex items-center justify-center gap-2 p-2">
-
-                            {room.doubleBeds > 0 &&
-                                <div className="flex flex-col items-center justify-center">
-                                    <label htmlFor="doubleBeds">Cama de casal</label>
-                                    <Input
-                                        id="doubleBeds"
-                                        type="text"
-                                        className="w-20 text-center mt-2 border rounded-sm p-1.5 bg-background"
-                                        value={room.doubleBeds}
-                                    />
-                                </div>
-                            }
-                            {room.doubleBeds > 0 && room.singleBeds > 0 &&
-                                <Separator orientation="vertical" />}
-
-                            {room.singleBeds > 0 &&
-                                <div className="flex flex-col items-center justify-center">
-                                <label htmlFor="singleBeds">Camas de solteiro</label>
-                                    <Input
-                                        id="singleBeds"
-                                        type="text"
-                                        className="w-20 text-center mt-2 border rounded-sm p-1.5 bg-background "
-                                        value={room.singleBeds}
-                                    />
-                                </div>
-                            }
-                        </div>
-                        <div className="flex mb-1 justify-center">
-                            <Button className="w-full">Salvar</Button>
-                        </div>
+                        <AdminRoomCard onSubmit={handleSubmitEdit} room={room} key={room.id}/>
                     </div>
                 ))}
             </div>

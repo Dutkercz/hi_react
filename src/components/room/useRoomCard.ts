@@ -5,10 +5,9 @@ import { useFormatCurrency } from "@/hooks/use-formart-currency"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import type { AxiosError } from "axios"
 import { toast } from "sonner"
+import type { BackendError } from "../error/types"
 
-type BackendError = {
-    message?: string;
-  }
+
 
 export const useRoomCard = (room: RoomResponse) => {
 
