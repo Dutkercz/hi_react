@@ -7,16 +7,10 @@ import {
   SidebarContent, SidebarHeader,
   SidebarMenu, SidebarMenuItem
 } from "@/components/ui/sidebar"
-import { LayoutDashboardIcon, ListIcon, ChartBarIcon, FolderIcon, UsersIcon, Settings2Icon, CircleHelpIcon, SearchIcon, Hotel } from "lucide-react"
+import { ListIcon, ChartBarIcon, FolderIcon, UsersIcon, CircleHelpIcon, SearchIcon, Hotel } from "lucide-react"
 
 const data = {
-
   navMain: [
-    {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: <LayoutDashboardIcon />,
-    },
     {
       title: "Quadro mensal",
       url: "/bookings",
@@ -39,14 +33,6 @@ const data = {
     },
   ],
   navSecondary: [
-    {
-      title: "Settings",
-      url: "#",
-      icon: (
-        <Settings2Icon
-        />
-      ),
-    },
     {
       title: "Get Help",
       url: "/help-page",
@@ -72,6 +58,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       className="h-screen w-60 border-r "
       {...props}
     >
+
       <SidebarHeader className="border-b border-sidebar-border/80">
         <SidebarMenu>
           <SidebarMenuItem>

@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/card"
 import { useFormatCurrency } from "@/hooks/use-formart-currency"
 import { TrendingUpIcon } from "lucide-react"
-import { useDashboard } from "./useDashboard"
 import { Spinner } from "../ui/spinner"
+import { useDashboard } from "./useDashboard"
 
 export function SectionCards() {
 

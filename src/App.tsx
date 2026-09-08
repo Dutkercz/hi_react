@@ -4,12 +4,12 @@ import { Route, Routes } from "react-router-dom"
 import { Toaster } from "sonner"
 import OccupationPage from "./pages/occupation-page"
 import RegisterPage from "./pages/register-page"
-import DashboardPage from "./pages/dashboard-page"
-import { SidebarInset, SidebarProvider } from "./components/ui/sidebar"
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "./components/ui/sidebar"
 import { AppSidebar } from "./components/sidebar/app-sidebar"
 import HelpPage from "./pages/help-page"
 import AdminPage from "./pages/admin-page"
-import { ProtectedRoute } from "./components/dashboard/protected-route"
+import AdminDashboardPage from "./pages/admin-dashboard-page"
+import { ProtectedRoute } from "./components/admin/protected-route"
 import AdminRoom from "./components/admin/admin-room"
 
 const client = new QueryClient()
@@ -17,7 +17,7 @@ const client = new QueryClient()
 const App = () => {
   return (
     <QueryClientProvider client={client}>
-      
+
       <SidebarProvider
         style={
           {
@@ -26,27 +26,29 @@ const App = () => {
           } as React.CSSProperties
         }
       >
-        <AppSidebar variant="inset" />
-
+        <AppSidebar variant="floating" />
         <SidebarInset className="min-h-screen bg-background">
           <Toaster />
 
           <div className="min-h-screen w-full">
+            <SidebarTrigger className="-ml-1" />
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/bookings" element={<OccupationPage />} />
               <Route path="/register" element={<RegisterPage />} />
-              <Route path="/dashboard" element={<DashboardPage />} />
 
               <Route path="/admin" element={
                 <ProtectedRoute>
                   <AdminPage />
-                </ProtectedRoute>} 
-                  children={
-                    <Route path="/admin/rooms" element={<AdminRoom/>} />
-                  }
-                />
-                
+                </ProtectedRoute>}
+                children={
+                  <>
+                    <Route index element={<AdminDashboardPage />} />
+                    <Route path="rooms" element={<AdminRoom />} />
+                  </>
+                }
+              />
+
               <Route path="/help-page" element={<HelpPage />} />
             </Routes>
           </div>
