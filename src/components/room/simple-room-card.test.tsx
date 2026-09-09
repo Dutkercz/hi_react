@@ -1,6 +1,7 @@
 import type { RoomResponse } from "@/api/room"
 import { render, screen } from "@testing-library/react"
 import SimpleRoomCard from "./simple-room-card"
+import { vi } from "vitest"
 
 describe("Teste do componente SimpleRoomCard", () => {
 
@@ -31,7 +32,10 @@ describe("Teste do componente SimpleRoomCard", () => {
         }
     }
 
-
+    beforeEach(() => {
+        vi.clearAllMocks()
+    })
+    
     it("Deve exibir as informações de Apartamento livre", () => {
 
         render(<SimpleRoomCard room={mockRoom} />)

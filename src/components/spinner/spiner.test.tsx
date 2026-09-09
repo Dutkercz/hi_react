@@ -1,12 +1,17 @@
 import '@testing-library/jest-dom/vitest';
 import { render, screen } from "@testing-library/react"
 import SpinnerComp from "./spiner"
+import { vi } from 'vitest';
 
 describe("Teste do componente Spinner", () => {
     const defaultProps = {
         title : "title",
         message : "message"
     }
+
+    beforeEach(() => {
+        vi.clearAllMocks()
+    })
 
     it("Deve renderizar o titulo e mensagem enviado por props", () => {
         render(
