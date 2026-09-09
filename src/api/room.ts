@@ -6,10 +6,6 @@ export const roomService = {
         const response = await axiosService.get("/rooms")
         return response.data
     },
-    addDaily: async (id: number) => {
-        const response = await axiosService.put(`/rooms/add-daily/${id}`)
-        return response.data
-    },
     updateRoomConfig: async (id: number, room : RoomUpdateRequest ) => {
         const response = await axiosService.patch(`/rooms/${id}`, room)
         return response.data

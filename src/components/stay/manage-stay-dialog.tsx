@@ -98,7 +98,7 @@ const ManageStay = ({ setOpen, room }: ManageRoomProps) => {
             <form onSubmit={form.handleSubmit(subtmit, (err) => console.log("Erros do Form:", err))} className="space-y-5">
                 <DialogHeader className="space-y-2">
                     <DialogTitle className="text-lg font-semibold">
-                        {room.status === "AVAILABLE" ? `Check-in Apartamento ${room.roomNumber}` : `Atualizar hospedagem ${room.roomNumber}`}
+                         Check-in Apartamento {room.roomNumber}
                     </DialogTitle>
                     <DialogDescription className="text-sm text-muted-foreground">
                         Preencha os dados da hospedagem para prosseguir.

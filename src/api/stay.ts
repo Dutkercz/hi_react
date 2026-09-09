@@ -6,45 +6,49 @@ export const stayService = {
         const response = await axiosService.post("/stays", data)
         return response.data
     },
-    addPaymentAmout : async (id : number, ammout : StayPayment) => {
+    addPaymentAmout: async (id: number, ammout: StayPayment) => {
         const response = await axiosService.patch(`/stays/${id}/add-payment-amount`, ammout)
         return response.data
     },
-    updateStay : async (id : number) => {
+    updateStay: async (id: number) => {
         const response = await axiosService.patch(`/stays/update-daily-rates/${id}`)
         return response.data
     },
-    checkOut: async (id : number) => {
+    checkOut: async (id: number) => {
         const response = await axiosService.patch(`/stays/checkout/${id}`)
         return response.data
     },
-    monthlyStatusBoard: async (year? : number, month?: number ) => {
+    monthlyStatusBoard: async (year?: number, month?: number) => {
         const response = await axiosService.get<MonthlyOccupation[]>(`/stays/monthly-occupation?year=${year}&month=${month}`)
         return response.data
     },
-    refundAmount: async (id : number, refundAmount: RefundPayment ) => {
+    refundAmount: async (id: number, refundAmount: RefundPayment) => {
         const response = await axiosService.patch(`/stays/refund/${id}`, refundAmount)
         return response.data
-    }
+    },
+    addDaily: async (id: number) => {
+        const response = await axiosService.put(`/stays/add-daily/${id}`)
+        return response.data
+    },
 }
 
 type StayPayment = {
-    amount : number
+    amount: number
 }
 
 export type RefundPayment = {
-    amount : number
+    amount: number
 }
 
 export type StayRequest = {
-    clientId : number
-    roomId : number
+    clientId: number
+    roomId: number
     checkIn: string
     checkOut: string
-    totalGuests : number
+    totalGuests: number
     isPaid: boolean
-    payment? : Payment
-    stayGuests : StayGuest[]
+    payment?: Payment
+    stayGuests: StayGuest[]
 }
 
 export type Payment = {
@@ -53,8 +57,8 @@ export type Payment = {
 }
 
 export type MonthlyOccupation = {
-    roomNumber : string
-    checkIn : string
-    checkOut : string
-    clientName : string
+    roomNumber: string
+    checkIn: string
+    checkOut: string
+    clientName: string
 }

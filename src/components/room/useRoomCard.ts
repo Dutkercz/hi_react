@@ -1,5 +1,5 @@
 import { adminService } from "@/api/admin"
-import { roomService, type RoomResponse } from "@/api/room"
+import { type RoomResponse } from "@/api/room"
 import { stayService, type RefundPayment } from "@/api/stay"
 import { useFormatCurrency } from "@/hooks/use-formart-currency"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
@@ -14,7 +14,7 @@ export const useRoomCard = (room: RoomResponse) => {
     const queryClient = useQueryClient()
 
     const addDailyMutation = useMutation({
-        mutationFn: (id: number) => roomService.addDaily(id),
+        mutationFn: (id: number) => stayService.addDaily(id),
         onSuccess: () => {
             toast.success("Diária adicionada com sucesso!")
             queryClient.invalidateQueries({ queryKey: ["rooms"] })
