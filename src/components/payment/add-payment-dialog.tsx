@@ -1,15 +1,12 @@
 import { type RoomResponse } from "@/api/room"
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog"
 import { DialogClose, DialogFooter } from "../ui/dialog"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { stayService } from "@/api/stay"
-import { toast } from "sonner"
 import { Input } from "../ui/input"
-import { useRoomCard } from "../room/useRoomCard"
 import { useState } from "react"
-import { InputNumberFormat } from '@react-input/number-format';
+import { InputNumberFormat } from '@react-input/number-format'
 import { Button } from "../ui/button"
 import { CreditCardIcon, WalletCardsIcon } from "lucide-react"
+import { useAddPayment } from "./useAddPayment"
 
 type AddPaymentDialogProps = {
     setOpen: (v: boolean) => void
@@ -18,52 +15,9 @@ type AddPaymentDialogProps = {
 
 const AddPaymentDialog = ({ setOpen, room }: AddPaymentDialogProps) => {
 
-    const { formatCurrency } = useRoomCard(room)
-    const queryClient = useQueryClient()
     const [amount, setAmount] = useState("")
-    const remainingPrice = room.stay?.remainingPrice ?? 0
-
-    const parseAmount = (value: string) => {
-        console.log(value);
-        
-        const digits = value.replace(/\D/g, "")
-        console.log(digits);
-        
-        return Number(digits) / 100
-    }
-
-    const addPayMutation = useMutation({
-        mutationFn: (data: number) => {
-            const stayId = room.stay?.id ?? 0
-            return stayService.addPaymentAmout(stayId, { amount: data })
-        },
-        onSuccess: () => {
-            toast.success("Pagamento registrado com sucesso!")
-            queryClient.invalidateQueries({ queryKey: ["rooms"] })
-            setOpen(false)
-        },
-        onError: () => {
-            toast.error("Erro ao adicionar pagamento")
-            setOpen(false)
-        }
-    })
-
-    const handleSubmit = () => {
-        const paymentAmount = parseAmount(amount)
-
-        if (paymentAmount <= 0) {
-            toast.error("Informe um valor válido para o pagamento")
-            return
-        }
-
-        if (paymentAmount > remainingPrice) {
-            toast.error("O pagamento não pode ser maior que o valor a pagar")
-            return
-        }
-
-        addPayMutation.mutate(paymentAmount)
-    }
-
+    const {handleSubmit, formatCurrency, remainingPrice, isPending} = useAddPayment({room, setOpen})
+    
     return (
         <DialogContent className="gap-5 sm:max-w-md">
             <DialogHeader className="space-y-2 pr-8">
@@ -113,9 +67,9 @@ const AddPaymentDialog = ({ setOpen, room }: AddPaymentDialogProps) => {
                 <DialogClose render={<Button type="button" variant="outline" />}>
                     Cancelar
                 </DialogClose>
-                <Button type="button" onClick={handleSubmit} disabled={addPayMutation.isPending}>
+                <Button type="button" onClick={() => handleSubmit(amount)} disabled={isPending}>
                     <WalletCardsIcon />
-                    {addPayMutation.isPending ? "Registrando..." : "Registrar pagamento"}
+                    {isPending ? "Registrando..." : "Registrar pagamento"}
                 </Button>
             </DialogFooter>
         </DialogContent>

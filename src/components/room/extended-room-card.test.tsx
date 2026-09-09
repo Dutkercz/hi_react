@@ -26,7 +26,7 @@ describe("Teste do componente ExtendedRoomCard", () => {
         stay: {
             id: 1,
             client: { id: 99, firstName: 'Cristian', lastName: 'Rosa' },
-            room: {id: 1, roomNumber: '1'},
+            room: { id: 1, roomNumber: '1' },
             checkIn: '2026-09-05T13:00:00',
             checkOut: '2026-09-08T09:00:00',
             dailyRates: 3,
@@ -91,26 +91,26 @@ describe("Teste do componente ExtendedRoomCard", () => {
     })
 
     it("Deve renderizar as informações da diária quando existir uma ativa", async () => {
-        
-        vi.mocked(useRoomCard).mockReturnValue({...baseHookReturn, roomStatus : "Ocupado"})
+
+        vi.mocked(useRoomCard).mockReturnValue({ ...baseHookReturn, roomStatus: "Ocupado" })
 
         renderWithProviders(<ExtendedRoomCard room={mockRoomWithStay} />)
 
         expect(screen.getByText("Cristian Rosa")).toBeInTheDocument()
         expect(screen.getByText("Ocupado")).toBeInTheDocument()
-        expect(screen.getByText("A pagar")).toBeInTheDocument()        
+        expect(screen.getByText("A pagar")).toBeInTheDocument()
     })
 
     it("Deve chamar a função de checkout corretamente", async () => {
-        vi.mocked(useRoomCard).mockReturnValue({...baseHookReturn, roomStatus: "Ocupado"})
+        vi.mocked(useRoomCard).mockReturnValue({ ...baseHookReturn, roomStatus: "Ocupado" })
         renderWithProviders(<ExtendedRoomCard room={mockRoomWithStay} />)
 
         const user = userEvent.setup()
 
-        const checkoutButton = screen.getByRole("button", {name: /Checkout/i})
+        const checkoutButton = screen.getByRole("button", { name: /Checkout/i })
         expect(checkoutButton).toBeInTheDocument()
         await user.click(checkoutButton)
-        const confirDialogButton = screen.getByRole("button", {name:/Confirmar/i})
+        const confirDialogButton = screen.getByRole("button", { name: /Confirmar/i })
         expect(confirDialogButton).toBeInTheDocument()
         await user.click(confirDialogButton)
         expect(mockHandleCheckout).toHaveBeenCalledWith(1)
@@ -118,15 +118,15 @@ describe("Teste do componente ExtendedRoomCard", () => {
 
     it("Deve chamar a função de adicionar diária corretamente", async () => {
 
-        vi.mocked(useRoomCard).mockReturnValue({...baseHookReturn, roomStatus: "Ocupado"})
+        vi.mocked(useRoomCard).mockReturnValue({ ...baseHookReturn, roomStatus: "Ocupado" })
         renderWithProviders(<ExtendedRoomCard room={mockRoomWithStay} />)
 
         const user = userEvent.setup()
 
-        const buttonAdicionarDiaria = screen.getByRole("button", {name: /Adicionar diária/i})
+        const buttonAdicionarDiaria = screen.getByRole("button", { name: /Adicionar diária/i })
         expect(buttonAdicionarDiaria).toBeInTheDocument()
         await user.click(buttonAdicionarDiaria)
-        expect(mockHandleAddDaily).toHaveBeenCalledWith(1) 
+        expect(mockHandleAddDaily).toHaveBeenCalledWith(1)
     })
 
     it("Deve renderizar um card pronto para hospedar ao clicar em um livre ", async () => {
@@ -136,7 +136,7 @@ describe("Teste do componente ExtendedRoomCard", () => {
 
         const user = userEvent.setup()
 
-        const checkinButton = screen.getByRole("button", {name: "Checkin"})
+        const checkinButton = screen.getByRole("button", { name: "Checkin" })
         expect(checkinButton).toBeInTheDocument()
         await user.click(checkinButton)
         expect(screen.getByText("Check-in Apartamento 1"))
