@@ -10,20 +10,20 @@ import AddPaymentDialog from '../payment/add-payment-dialog'
 import { AlertDialogModal } from '../alert/alert'
 import { AlertDialog } from '../ui/alert-dialog'
 
-type RoomCardProps = {
+type ExtendedRoomCardProps = {
     room: RoomResponse
 }
 
 const guestOptions = [1, 2, 3, 4] as const
 
-const RoomCard = ({ room }: RoomCardProps) => {
+const ExtendedRoomCard = ({ room }: ExtendedRoomCardProps) => {
     const stay = room.stay
     const [open, setOpen] = useState(false)
     const [openAddPay, setOpenAddPay] = useState(false)
     const [alertOpen, setAlertOpen] = useState(false)
 
-    const { addDailyMutation, formatCurrency, dailyPrice, roomStatus,
-        roomStatusClasses, stayStatus, handleUpdateStay, handleCheckout, handleRefundAmount } = useRoomCard(room)  
+    const { handleAddDaily, formatCurrency, dailyPrice, roomStatus,
+        roomStatusClasses, stayStatus, handleUpdateStay, handleCheckout, handleRefundAmount } = useRoomCard(room)
 
     return (
 
@@ -75,7 +75,7 @@ const RoomCard = ({ room }: RoomCardProps) => {
                                 <p className='text-xs text-muted-foreground'>Diárias</p>
                                 <div className='flex items-center gap-2'>
                                     <p className='font-medium'>{stay.dailyRates}</p>
-                                    
+
                                     <Button onClick={handleUpdateStay} size="icon" variant="ghost">
                                         <RefreshCcw />
                                     </Button>
@@ -121,14 +121,14 @@ const RoomCard = ({ room }: RoomCardProps) => {
 
                         </div>
                         <div className={`flex min-w-0 flex-col rounded-lg border border-border/70  p-2 ${stay.remainingPrice >= 0 ? 'bg-muted' : 'bg-one-green'}`}>
-                            <p className='text-xs text-muted-foreground'>{stay.remainingPrice > 0 ? "A pagar" : "Crédito Cliente" }</p>
+                            <p className='text-xs text-muted-foreground'>{stay.remainingPrice >= 0 ? "A pagar" : "Crédito Cliente"}</p>
                             <p className='font-semibold'>
                                 {formatCurrency(stay?.remainingPrice >= 0 ? stay?.remainingPrice : stay?.remainingPrice * -1)}
                             </p>
-                            {stay?.remainingPrice * -1 > 0 && 
-                            <Button onClick={() => handleRefundAmount(stay.id, {amount: stay.remainingPrice * -1})} className='mt-3 w-full' size='sm' variant='outline'>
-                                <BanknoteArrowDown /> Devolver valor
-                            </Button>
+                            {stay?.remainingPrice * -1 > 0 &&
+                                <Button onClick={() => handleRefundAmount(stay.id, { amount: stay.remainingPrice * -1 })} className='mt-3 w-full' size='sm' variant='outline'>
+                                    <BanknoteArrowDown /> Devolver valor
+                                </Button>
                             }
                         </div>
                         <div className='rounded-lg border border-border/70 bg-muted p-2'>
@@ -155,14 +155,14 @@ const RoomCard = ({ room }: RoomCardProps) => {
                     <div className='flex w-full flex-col items-stretch justify-center gap-2 sm:flex-row'>
                         {room.stay ?
                             <div className="flex w-full gap-1">
-                                <Button className="flex-1" onClick={() => addDailyMutation.mutate()}>
+                                <Button className="flex-1" onClick={handleAddDaily}>
                                     Adicionar diária
                                 </Button>
                                 <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
                                     <DialogTrigger render={
                                         <Button className="flex-1" variant="destructive"
                                         >
-                                            Check-out
+                                            Checkout
                                         </Button>
                                     } />
                                     <AlertDialogModal isOpen={setAlertOpen} id={stay?.id} onConfirm={handleCheckout} title='Checkout'
@@ -187,4 +187,4 @@ const RoomCard = ({ room }: RoomCardProps) => {
     )
 }
 
-export default RoomCard
+export default ExtendedRoomCard
