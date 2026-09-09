@@ -21,6 +21,24 @@ describe("Teste do componente ExtendedRoomCard", () => {
         stay: null,
     }
 
+    const mockRoomWithStay: RoomResponse = {
+        ...mockRoom,
+        stay: {
+            id: 1,
+            client: { id: 99, firstName: 'Cristian', lastName: 'Rosa' },
+            room: {id: 1, roomNumber: '1'},
+            checkIn: '2026-09-05T13:00:00',
+            checkOut: '2026-09-08T09:00:00',
+            dailyRates: 3,
+            dailyPrice: 150,
+            paidPrice: 450,
+            remainingPrice: 0,
+            totalPrice: 450,
+            isPaid: true,
+            stayStatus: 'CURRENT',
+        }
+    }
+
     const renderWithProviders = (ui: React.ReactElement) => {
         const queryClient = new QueryClient({
             defaultOptions: {
@@ -73,24 +91,7 @@ describe("Teste do componente ExtendedRoomCard", () => {
     })
 
     it("Deve informar as informações da diária quando existir uma ativa", async () => {
-        const mockRoomWithStay: RoomResponse = {
-            ...mockRoom,
-            stay: {
-                id: 1,
-                client: { id: 99, firstName: 'Cristian', lastName: 'Rosa' },
-                room: {id: 1, roomNumber: '1'},
-                checkIn: '2026-09-05T13:00:00',
-                checkOut: '2026-09-08T09:00:00',
-                dailyRates: 3,
-                dailyPrice: 150,
-                paidPrice: 450,
-                remainingPrice: 0,
-                totalPrice: 450,
-                isPaid: true,
-                stayStatus: 'CURRENT',
-            }
-        }
-
+        
         vi.mocked(useRoomCard).mockReturnValue({...baseHookReturn, roomStatus : "Ocupado"})
 
         renderWithProviders(<ExtendedRoomCard room={mockRoomWithStay} />)
@@ -100,18 +101,26 @@ describe("Teste do componente ExtendedRoomCard", () => {
         expect(screen.getByText("Ocupado")).toBeInTheDocument()
         expect(screen.getByText("A pagar")).toBeInTheDocument()
 
-        const buttonCheckout = screen.getByRole("button", {name: /Checkout/i})
-        expect(buttonCheckout).toBeInTheDocument();
-        await user.click(buttonCheckout)
-        const confirDialogButton = screen.getByRole("button", {name: /Confirmar/i})
-        await user.click(confirDialogButton)
-        expect(mockHandleCheckout).toHaveBeenCalledWith(1)
-
         const buttonAdicionarDiaria = screen.getByRole("button", {name: /Adicionar diária/i})
         expect(buttonAdicionarDiaria).toBeInTheDocument()
         await user.click(buttonAdicionarDiaria)
         expect(mockHandleAddDaily).toHaveBeenCalledWith(1)
         
+    })
+
+    it("Deve chamar a função de checkout corretamente", async () => {
+        vi.mocked(useRoomCard).mockReturnValue({...baseHookReturn, roomStatus: "Ocupado"})
+        renderWithProviders(<ExtendedRoomCard room={mockRoomWithStay} />)
+
+        const user = userEvent.setup()
+
+        const checkoutButton = screen.getByRole("button", {name: /Checkout/i})
+        expect(checkoutButton).toBeInTheDocument()
+        await user.click(checkoutButton)
+        const confirDialogButton = screen.getByRole("button", {name:/Confirmar/i})
+        expect(confirDialogButton).toBeInTheDocument()
+        await user.click(confirDialogButton)
+        expect(mockHandleCheckout).toHaveBeenCalledWith(1)
     })
 
 
