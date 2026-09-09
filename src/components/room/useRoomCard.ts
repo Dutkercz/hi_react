@@ -14,7 +14,7 @@ export const useRoomCard = (room: RoomResponse) => {
     const queryClient = useQueryClient()
 
     const addDailyMutation = useMutation({
-        mutationFn: () => roomService.addDaily(room.id),
+        mutationFn: (id: number) => roomService.addDaily(id),
         onSuccess: () => {
             toast.success("Diária adicionada com sucesso!")
             queryClient.invalidateQueries({ queryKey: ["rooms"] })
@@ -25,8 +25,8 @@ export const useRoomCard = (room: RoomResponse) => {
         } 
     })
 
-    const handleAddDaily = () => {
-        addDailyMutation.mutate()
+    const handleAddDaily = (id: number) => {
+        addDailyMutation.mutate(id)
     }
 
     

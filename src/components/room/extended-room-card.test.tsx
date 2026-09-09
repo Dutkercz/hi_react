@@ -4,6 +4,7 @@ import type { RoomResponse } from "@/api/room";
 import { render, screen } from "@testing-library/react";
 import ExtendedRoomCard from "./extended-room-card";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import userEvent from "@testing-library/user-event";
 
 vi.mock('./useRoomCard', () => ({
     useRoomCard: vi.fn()
@@ -71,7 +72,7 @@ describe("Teste do componente ExtendedRoomCard", () => {
         expect(screen.getByText("Disponível")).toBeInTheDocument()
     })
 
-    it("Deve informar as informações da diária quando existir uma ativa", () => {
+    it("Deve informar as informações da diária quando existir uma ativa", async () => {
         const mockRoomWithStay: RoomResponse = {
             ...mockRoom,
             stay: {
@@ -93,13 +94,23 @@ describe("Teste do componente ExtendedRoomCard", () => {
         vi.mocked(useRoomCard).mockReturnValue({...baseHookReturn, roomStatus : "Ocupado"})
 
         renderWithProviders(<ExtendedRoomCard room={mockRoomWithStay} />)
+        const user = userEvent.setup()
 
         expect(screen.getByText("Cristian Rosa")).toBeInTheDocument()
         expect(screen.getByText("Ocupado")).toBeInTheDocument()
         expect(screen.getByText("A pagar")).toBeInTheDocument()
 
-        expect(screen.getByRole('button', {name: /Checkout/i}))
-        
+        const buttonCheckout = screen.getByRole("button", {name: /Checkout/i})
+        expect(buttonCheckout).toBeInTheDocument();
+        await user.click(buttonCheckout)
+        const confirDialogButton = screen.getByRole("button", {name: /Confirmar/i})
+        await user.click(confirDialogButton)
+        expect(mockHandleCheckout).toHaveBeenCalledWith(1)
+
+        const buttonAdicionarDiaria = screen.getByRole("button", {name: /Adicionar diária/i})
+        expect(buttonAdicionarDiaria).toBeInTheDocument()
+        await user.click(buttonAdicionarDiaria)
+        expect(mockHandleAddDaily).toHaveBeenCalledWith(1)
         
     })
 

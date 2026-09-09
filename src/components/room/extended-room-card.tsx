@@ -153,9 +153,9 @@ const ExtendedRoomCard = ({ room }: ExtendedRoomCardProps) => {
                 }
                 <CardAction className='w-full flex justify-center'>
                     <div className='flex w-full flex-col items-stretch justify-center gap-2 sm:flex-row'>
-                        {room.stay ?
+                        {room.stay && stay ?
                             <div className="flex w-full gap-1">
-                                <Button className="flex-1" onClick={handleAddDaily}>
+                                <Button className="flex-1" onClick={() => handleAddDaily(stay.id)}>
                                     Adicionar diária
                                 </Button>
                                 <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
