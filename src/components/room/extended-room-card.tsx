@@ -82,7 +82,7 @@ const ExtendedRoomCard = ({ room }: ExtendedRoomCardProps) => {
                                 </div>
                             </div>
                             <div>
-                                <p className='text-xs text-muted-foreground'>Check-in</p>
+                                <p className='text-xs text-muted-foreground'>Checkin</p>
                                 <p className='font-medium'>{new Date(stay.checkIn).toLocaleDateString('pt-BR')}</p>
                             </div>
                             {stay.checkOut && (
@@ -174,7 +174,7 @@ const ExtendedRoomCard = ({ room }: ExtendedRoomCardProps) => {
                                 <DialogTrigger className="flex-1 flex" render={
                                     <Button className="w-full"
                                         onClick={() => setOpen(true)}>
-                                        Check-in
+                                        Checkin
                                     </Button>}>
                                 </DialogTrigger>
                                 <ManageStay room={room} setOpen={setOpen} />

@@ -90,7 +90,7 @@ describe("Teste do componente ExtendedRoomCard", () => {
         expect(screen.getByText("Disponível")).toBeInTheDocument()
     })
 
-    it("Deve informar as informações da diária quando existir uma ativa", async () => {
+    it("Deve renderizar as informações da diária quando existir uma ativa", async () => {
         
         vi.mocked(useRoomCard).mockReturnValue({...baseHookReturn, roomStatus : "Ocupado"})
 
@@ -127,6 +127,21 @@ describe("Teste do componente ExtendedRoomCard", () => {
         expect(buttonAdicionarDiaria).toBeInTheDocument()
         await user.click(buttonAdicionarDiaria)
         expect(mockHandleAddDaily).toHaveBeenCalledWith(1) 
+    })
+
+    it("Deve renderizar um card pronto para hospedar ao clicar em um livre ", async () => {
+
+        vi.mocked(useRoomCard).mockReturnValue(baseHookReturn)
+        renderWithProviders(<ExtendedRoomCard room={mockRoom} />)
+
+        const user = userEvent.setup()
+
+        const checkinButton = screen.getByRole("button", {name: "Checkin"})
+        expect(checkinButton).toBeInTheDocument()
+        await user.click(checkinButton)
+        expect(screen.getByText("Check-in Apartamento 1"))
+        expect(screen.getByText("01 pessoa")).toBeInTheDocument()
+        expect(screen.getByText("Cama solteiro")).toBeInTheDocument()
     })
 
 
