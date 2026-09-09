@@ -25,6 +25,10 @@ export const useRoomCard = (room: RoomResponse) => {
         } 
     })
 
+    const handleAddDaily = () => {
+        addDailyMutation.mutate()
+    }
+
     
     const {data : lastDailyPrice} = useQuery({
         queryKey: ["daily-prices"],
@@ -70,7 +74,6 @@ export const useRoomCard = (room: RoomResponse) => {
     })
 
     const handleUpdateStay = () => {
-        
         mutationUpdateStay.mutate()
     }
 
@@ -106,6 +109,6 @@ export const useRoomCard = (room: RoomResponse) => {
         refundDailyAmountMutation.mutate({stayId, refundAmount})
     }
 
-    return { addDailyMutation, formatCurrency, roomStatus, roomStatusClasses, 
+    return { handleAddDaily, formatCurrency, roomStatus, roomStatusClasses, 
         stayStatus, dailyPrice, handleUpdateStay, handleCheckout, handleRefundAmount }
 }

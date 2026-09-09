@@ -2,7 +2,7 @@ import { ChartAreaInteractive } from "@/components/sidebar/chart-area-interactiv
 import { SectionCards } from "@/components/admin/dashboard-cards"
 import { SiteHeader } from "@/components/sidebar/site-header"
 
-const AdminDashboardPage = () => {
+const AdminDashboard = () => {
     return (
         <div>
             <SiteHeader />
@@ -20,4 +20,4 @@ const AdminDashboardPage = () => {
     )
 }
 
-export default AdminDashboardPage
+export default AdminDashboard

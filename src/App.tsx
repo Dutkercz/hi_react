@@ -8,7 +8,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "./components/ui/s
 import { AppSidebar } from "./components/sidebar/app-sidebar"
 import HelpPage from "./pages/help-page"
 import AdminPage from "./pages/admin-page"
-import AdminDashboardPage from "./pages/admin-dashboard-page"
+import AdminDashboard from "./components/admin/admin-dashboard"
 import { ProtectedRoute } from "./components/admin/protected-route"
 import AdminRoom from "./components/admin/admin-room"
 
@@ -43,7 +43,7 @@ const App = () => {
                 </ProtectedRoute>}
                 children={
                   <>
-                    <Route index element={<AdminDashboardPage />} />
+                    <Route index element={<AdminDashboard />} />
                     <Route path="rooms" element={<AdminRoom />} />
                   </>
                 }

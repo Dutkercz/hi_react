@@ -1,4 +1,4 @@
-import RoomCard from '@/components/room/extended-room-card'
+import ExtendedRoomCard from '@/components/room/extended-room-card'
 import { roomService } from '@/api/room'
 import { useQuery } from '@tanstack/react-query'
 import SpinnerComp from '@/components/spinner/spiner'
@@ -50,7 +50,7 @@ const HomePage = () => {
                                     </div>
                                 </DialogTrigger>
                                 <DialogContent className='max-h-[90vh] overflow-y-auto sm:max-w-xl'>
-                                    <RoomCard room={room} />
+                                    <ExtendedRoomCard room={room} />
                                 </DialogContent>
                             </Dialog>
                         )
