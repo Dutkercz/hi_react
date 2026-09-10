@@ -5,6 +5,8 @@ import AddPaymentDialog from "./add-payment-dialog"
 import { useAddPayment } from "./useAddPayment"
 import type { ReactElement } from "react"
 import { Dialog } from "@base-ui/react"
+import { useFormatCurrency } from "@/hooks/use-formart-currency"
+import userEvent from "@testing-library/user-event"
 
 vi.mock("./useAddPayment", () => ({
     useAddPayment: vi.fn()
@@ -13,6 +15,8 @@ vi.mock("./useAddPayment", () => ({
 describe("Teste do Componente AddPaymentDialog", () => {
 
     const mockSetOpen = vi.fn()
+    const mockHandleSubmit = vi.fn()
+    const format = useFormatCurrency()
 
     const mockRoom: RoomResponse = {
         id: 1,
@@ -37,8 +41,8 @@ describe("Teste do Componente AddPaymentDialog", () => {
     }
 
     const mockHookReturn = {
-        handleSubmit: vi.fn(),
-        formatCurrency: vi.fn(),
+        handleSubmit: mockHandleSubmit,
+        formatCurrency: format,
         remainingPrice: 0,
         isPending: false
     }
@@ -51,20 +55,35 @@ describe("Teste do Componente AddPaymentDialog", () => {
         )
     }
 
-beforeEach(() => {
-    vi.clearAllMocks()
-})
+    beforeEach(() => {
+        vi.clearAllMocks()
+    })
 
-it("Deve renderizar as informações do dialog corretamente", () => {
+    it("Deve renderizar as informações do dialog corretamente", () => {
+        vi.mocked(useAddPayment).mockReturnValue(mockHookReturn)
+        renderWithProviders(<AddPaymentDialog room={mockRoom} setOpen={mockSetOpen} />)
 
-    vi.mocked(useAddPayment).mockReturnValue(mockHookReturn)
-    renderWithProviders(<AddPaymentDialog room={mockRoom} setOpen={mockSetOpen} />)
+        expect(screen.getByText("Financeiro")).toBeInTheDocument()
+        expect(screen.getByText("Apartamento 1 · Cristian Rosa")).toBeInTheDocument()
+        expect(screen.getByText("Valor já pago")).toBeInTheDocument()
+        expect(screen.getByText("R$ 400,00")).toBeInTheDocument()
+        expect(screen.getByText("Saldo restante")).toBeInTheDocument()
+    })
 
-    expect(screen.getByText("Financeiro")).toBeInTheDocument()
-    expect(screen.getByText("Apartamento 1 · Cristian Rosa")).toBeInTheDocument()
-    expect(screen.getByText("Valor já pago")).toBeInTheDocument()
-    expect(screen.getByText("Saldo restante")).toBeInTheDocument()
-})
+    it("Deve chamar a função de de submit", async () => {
+        vi.mocked(useAddPayment).mockReturnValue(mockHookReturn)
+        renderWithProviders(<AddPaymentDialog room={mockRoom} setOpen={mockSetOpen}/>)
+        
+        const user = userEvent.setup()
+        const buttonRegistrarPagamento = screen.getByRole("button", {name: "Registrar pagamento"})
+        const fieldValorDoPagamento = screen.getByLabelText("Valor do pagamento")
+        expect(buttonRegistrarPagamento).toBeInTheDocument()
+        expect(fieldValorDoPagamento).toBeInTheDocument()
+        
+        await user.type(fieldValorDoPagamento, "50")
+        await user.click(buttonRegistrarPagamento)
+        expect(mockHandleSubmit).toHaveBeenCalledWith("R$ 50,00")
+    })
 
 
 })
