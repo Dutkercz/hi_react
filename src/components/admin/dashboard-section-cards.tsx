@@ -9,10 +9,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { useFormatCurrency } from "@/hooks/use-formart-currency"
 import { TrendingUpIcon } from "lucide-react"
 import { Spinner } from "../ui/spinner"
 import { useDashboard } from "./useDashboard"
+import SectionCard from "./cards/section-card"
 
 export function SectionCards() {
 
@@ -20,39 +20,15 @@ export function SectionCards() {
   const month = new Date().getMonth() + 1
   const { data, isLoading, isError } = useDashboard(year, month)
 
-  const formart = useFormatCurrency()
-
   if (isLoading) return <Spinner />
   if (isError) return <><h1>Erro</h1></>
 
-  const totalMonthProfit = data?.totalMonthProfit
+  const totalMonthProfit = data?.totalMonthProfit?? 0
+  const percentageChange = data?.percentageChange?? 0
 
   return (
     <div className="grid grid-cols-1 gap-3 px-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-3 dark:*:data-[slot=card]:bg-card">
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Total de diárias em {month}/{year}</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {formart(totalMonthProfit)}
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <TrendingUpIcon
-              />
-              Show up %
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            numero a + de valor em diárias{" "}
-            <TrendingUpIcon className="size-4" />
-          </div>
-          <div className="text-muted-foreground">
-            em relação a mes x
-          </div>
-        </CardFooter>
-      </Card>
+      <SectionCard month={month.toString()} year={year.toString()} title={totalMonthProfit} badge={percentageChange} />
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>Active Accounts</CardDescription>

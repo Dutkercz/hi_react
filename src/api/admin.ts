@@ -14,6 +14,7 @@ export const adminService = {
 
 export type MonthlyResume = {
     totalMonthProfit: number
+    percentageChange: number
 }
 
 export type DailyPricesResponse = {

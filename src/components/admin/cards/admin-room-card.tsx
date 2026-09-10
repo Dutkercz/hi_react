@@ -3,10 +3,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { useState, type BaseSyntheticEvent } from "react"
-import { AlertDialogModal } from "../alert/alert"
-import { AlertDialog } from "../ui/alert-dialog"
-import { DialogTrigger } from "../ui/dialog"
-
+import { AlertDialog } from "@/components/ui/alert-dialog"
+import { DialogTrigger } from "@/components/ui/dialog"
+import { AlertDialogModal } from "@/components/alert/alert"
 type AdminRoomCardType = {
     room: RoomResponse
     onSubmit: (id: number, roomUpdate: RoomUpdateRequest) => void

@@ -1,11 +1,11 @@
 import { roomService, type RoomUpdateRequest } from "@/api/room"
-import AdminRoomCard from "@/components/admin/admin-room-card"
 import type { BackendError } from "@/components/error/types"
 import SpinnerComp from "@/components/spinner/spiner"
 import { CardDescription, CardTitle } from "@/components/ui/card"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import type { AxiosError } from "axios"
 import { toast } from "sonner"
+import AdminRoomCard from "./cards/admin-room-card"
 
 const AdminRoom = () => {
 

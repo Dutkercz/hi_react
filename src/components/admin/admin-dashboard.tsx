@@ -1,5 +1,5 @@
 import { ChartAreaInteractive } from "@/components/sidebar/chart-area-interactive"
-import { SectionCards } from "@/components/admin/dashboard-cards"
+import { SectionCards } from "@/components/admin/dashboard-section-cards"
 import { SiteHeader } from "@/components/sidebar/site-header"
 
 const AdminDashboard = () => {
