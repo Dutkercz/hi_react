@@ -1,0 +1,117 @@
+import { adminService } from "@/service/admin"
+import { useFormatCurrency } from "@/hooks/useFormatCurrency"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import type { AxiosError } from "axios"
+import { toast } from "sonner"
+import type { BackendError } from "../types/backendError"
+import type { RoomResponse } from "@/types/room"
+import { stayService } from "@/service/stay"
+import type { RefundPayment } from "@/types/stays"
+
+
+
+export const useRoomCard = (room: RoomResponse) => {
+
+    const queryClient = useQueryClient()
+
+    const addDailyMutation = useMutation({
+        mutationFn: (id: number) => stayService.addDaily(id),
+        onSuccess: () => {
+            toast.success("Diária adicionada com sucesso!")
+            queryClient.invalidateQueries({ queryKey: ["rooms"] })
+        },
+        onError: (erro: AxiosError<BackendError>) => {
+            const mensagemApi = erro.response?.data?.detail || "Erro desconhecido";
+            toast.error("Erro ao adicionar diária: " + mensagemApi)
+        }
+    })
+
+    const handleAddDaily = (id: number) => {
+        addDailyMutation.mutate(id)
+    }
+
+
+    const { data: lastDailyPrice } = useQuery({
+        queryKey: ["daily-prices"],
+        queryFn: () => adminService.getDailyPrices(),
+    })
+
+    const dailyPrice = {
+        1: lastDailyPrice?.oneGuestPrice,
+        2: lastDailyPrice?.twoGuestPrice,
+        3: lastDailyPrice?.threeGuestPrice,
+        4: lastDailyPrice?.fourGuestPrice
+    }
+
+    const formatCurrency = useFormatCurrency()
+
+    const roomStatus = {
+        AVAILABLE: 'Disponível',
+        OCCUPIED: 'Ocupado',
+        MAINTENANCE: 'Manutenção',
+        RESERVED: 'Reservado',
+    }[room.status]
+
+    const roomStatusClasses = {
+        AVAILABLE: 'bg-emerald-500/10 text-emerald-700',
+        OCCUPIED: 'bg-sky-500/10 text-sky-700',
+        MAINTENANCE: 'bg-amber-500/10 text-amber-700',
+        RESERVED: 'bg-violet-500/10 text-violet-700',
+    }[room.status]
+
+    const stayStatus = {
+        CURRENT: "Em andamento",
+        CANCELED: "Cancelada",
+        FINISHED: "Finalizada"
+    }
+
+    const mutationUpdateStay = useMutation({
+        mutationFn: () => stayService.updateStay(room.stay?.id ?? -1),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['rooms'] }),
+        onError: (erro: AxiosError<BackendError>) => {
+            const mensagemApi = erro.response?.data?.detail || "Erro desconhecido";
+            toast.error("Erro ao autlizar diária: " + mensagemApi)
+        }
+    })
+
+    const handleUpdateStay = () => {
+        mutationUpdateStay.mutate()
+    }
+
+    const mutationCheckout = useMutation({
+        mutationFn: (stayId: number) => stayService.checkOut(stayId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['rooms'] })
+            toast.success("Sucesso ao realizar checkout")
+        },
+        onError: (erro: AxiosError<BackendError>) => {
+            const mensagemApi = erro.response?.data?.detail || "Erro desconhecido";
+            toast.error("Erro ao realizar checkout: " + mensagemApi)
+        }
+    })
+
+    const handleCheckout = (stayId: number) => {
+        mutationCheckout.mutate(stayId)
+    }
+
+    const refundDailyAmountMutation = useMutation({
+        mutationFn: ({ stayId, refundAmount }: { stayId: number, refundAmount: RefundPayment }) =>
+            stayService.refundAmount(stayId, refundAmount),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['rooms'] })
+            toast.success("Sucesso ao realizar o reembolso")
+        },
+        onError: (erro: AxiosError<BackendError>) => {
+            const mensagemApi = erro.response?.data?.detail || "Erro desconhecido";
+            toast.error("Erro ao realizar reembolso: " + mensagemApi)
+        }
+    })
+    const handleRefundAmount = (stayId: number, refundAmount: RefundPayment) => {
+        refundDailyAmountMutation.mutate({ stayId, refundAmount })
+    }
+
+    return {
+        handleAddDaily, formatCurrency, roomStatus, roomStatusClasses,
+        stayStatus, dailyPrice, handleUpdateStay, handleCheckout, handleRefundAmount
+    }
+}
