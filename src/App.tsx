@@ -11,6 +11,9 @@ import AdminDashboard from "./components/admin/AdminDashboard"
 import { ProtectedRoute } from "./components/routes/RoutesProtect"
 import AdminRoom from "./components/admin/AdminRoom"
 import LoginPage from "./pages/LoginPage"
+import MyAccountPage from "./pages/MyAccountPage"
+import RegisterUserPage from "./pages/RegisterUserPage"
+import AdminDailyPrices from "./components/admin/AdminDailyPrices"
 
 
 const App = () => {
@@ -43,11 +46,20 @@ const App = () => {
                     <>
                       <Route index element={<AdminDashboard />} />
                       <Route path="rooms" element={<AdminRoom />} />
+                      <Route path="register-user" element={<RegisterUserPage />} />
+                      <Route path="daily-prices" element={<AdminDailyPrices />} />
                     </>
                   }
                 />
 
                 <Route path="/help-page" element={<HelpPage />} />
+
+                <Route path="/account/me" element={
+                  <ProtectedRoute>
+                    <MyAccountPage />
+                  </ProtectedRoute>}
+                />
+
               </Routes>
             </div>
           </SidebarInset>

@@ -15,3 +15,11 @@ export type DailyPricesResponse = {
     threeGuestPrice: number
     fourGuestPrice: number
 }
+
+export type DailyPricesUpdate = {
+    id: number
+    oneGuestPrice: number
+    twoGuestPrice: number
+    threeGuestPrice: number
+    fourGuestPrice: number
+}

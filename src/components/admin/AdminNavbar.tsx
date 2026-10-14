@@ -42,7 +42,7 @@ export function AdminNavigation() {
 
                 <NavigationMenuItem>
                     <NavigationMenuLink
-                        render={<NavLink to="/admin/daily-rates" />}
+                        render={<NavLink to="/admin/daily-prices" />}
                         className={cn(
                             navigationMenuTriggerStyle(),
                             "group h-10 w-full gap-2 rounded-xl border border-transparent px-4 text-muted-foreground shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-border hover:bg-background hover:text-foreground hover:shadow-md data-active:border-primary/20 data-active:bg-primary/10 data-active:text-primary data-active:shadow-sm sm:w-auto"
@@ -50,6 +50,19 @@ export function AdminNavigation() {
                     >
                         <ReceiptText className="size-4 transition-transform duration-200 group-hover:scale-110" />
                         Diárias
+                    </NavigationMenuLink>
+                </NavigationMenuItem>
+
+                <NavigationMenuItem>
+                    <NavigationMenuLink
+                        render={<NavLink to="/admin/register-user" />}
+                        className={cn(
+                            navigationMenuTriggerStyle(),
+                            "group h-10 w-full gap-2 rounded-xl border border-transparent px-4 text-muted-foreground shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-border hover:bg-background hover:text-foreground hover:shadow-md data-active:border-primary/20 data-active:bg-primary/10 data-active:text-primary data-active:shadow-sm sm:w-auto"
+                        )}
+                    >
+                        <ReceiptText className="size-4 transition-transform duration-200 group-hover:scale-110" />
+                        Cadastrar Funcionário
                     </NavigationMenuLink>
                 </NavigationMenuItem>
           

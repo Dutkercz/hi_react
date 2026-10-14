@@ -17,4 +17,7 @@ export default defineConfig({
     environment: 'jsdom',    // Configura o simulador de navegador
     setupFiles: './src/setupTests.ts', // Arquivo para carregar extensões (opcional, mas recomendado)
   },
+  server:{
+    allowedHosts:[ ""]
+  }
 })

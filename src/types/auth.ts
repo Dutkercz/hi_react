@@ -10,8 +10,9 @@ export type LoginResquest = {
 }
 
 export type AuthContextType = {
-    isLogginIn: boolean
+    isLoading: boolean
     login: (data: LoginResquest) => void
     logout: () => void
-    form : UseFormReturn<LoginResquest>
+    form: UseFormReturn<LoginResquest>
+    isLogged: boolean
 }

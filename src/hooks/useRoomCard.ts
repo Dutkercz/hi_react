@@ -31,7 +31,7 @@ export const useRoomCard = (room: RoomResponse) => {
     }
 
 
-    const { data: lastDailyPrice } = useQuery({
+    const { data:lastDailyPrice} = useQuery({
         queryKey: ["daily-prices"],
         queryFn: () => adminService.getDailyPrices(),
     })
