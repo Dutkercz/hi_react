@@ -5,7 +5,7 @@ export const ACCESS_TOKEN_KEY = "accessToken"
 export const AUTH_SESSION_EXPIRED_EVENT = "auth:session-expired"
 
 export const axiosService = axios.create({
-    baseURL: "https://hi-spring.fly.dev/api/v1",
+    baseURL: "https://hi-spring.onrender.com/api/v1",
     headers: {
         "Content-Type": "application/json"
     },
@@ -13,7 +13,7 @@ export const axiosService = axios.create({
 })
 
 const refreshService = axios.create({
-    baseURL: "https://hi-spring.fly.dev/api/v1/auth",
+    baseURL: "https://hi-spring.onrender.com/api/v1/auth",
     withCredentials: true
 })
 
