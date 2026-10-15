@@ -1,5 +1,6 @@
 import { axiosService } from "@/service/axiosService"
 import type { DailyPricesResponse, DailyPricesUpdate, MonthlyResume } from "@/types/admin"
+import type { ClientResponse } from "@/types/client"
 
 export const adminService = {
     monthResume: async (year: number, month: number) => {
@@ -13,6 +14,10 @@ export const adminService = {
     },
     updateDailyPrices: async (data: DailyPricesUpdate) => {
         const response = await axiosService.patch(`/admin`, data)
+        return response.data
+    },
+    infoSearch : async (param : string) => {
+        const response = await axiosService.get<ClientResponse[]>(`/admin/search?param=${param}`)
         return response.data
     }
 }

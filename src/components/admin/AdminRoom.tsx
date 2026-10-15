@@ -42,7 +42,7 @@ const AdminRoom = () => {
         <div>
             <CardTitle className="m-1 text-center text-2xl">Gerenciar Apartamentos</CardTitle>
             <CardDescription className="ml-2 text-center">Editar a configuração dos apartamentos</CardDescription>
-            <div className="grid grid-cols-3 gap-2 m-2">
+            <div className="grid gap-2 m-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {rooms?.map((room) => (
                     <div key={room.id} className="p-2 border bg-muted rounded-lg">
                         <AdminRoomCard onSubmit={handleSubmitEdit} room={room} key={room.id} />

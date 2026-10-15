@@ -42,7 +42,7 @@ const data = {
     },
     {
       title: "Search",
-      url: "#",
+      url: "/search",
       icon: <SearchIcon />,
     },
   ],
