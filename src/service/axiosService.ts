@@ -4,8 +4,10 @@ import axios, { type InternalAxiosRequestConfig } from "axios"
 export const ACCESS_TOKEN_KEY = "accessToken"
 export const AUTH_SESSION_EXPIRED_EVENT = "auth:session-expired"
 
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api/v1"
+
 export const axiosService = axios.create({
-    baseURL: "https://hi-spring.onrender.com/api/v1",
+    baseURL: BASE_URL,
     headers: {
         "Content-Type": "application/json"
     },
@@ -13,7 +15,7 @@ export const axiosService = axios.create({
 })
 
 const refreshService = axios.create({
-    baseURL: "https://hi-spring.onrender.com/api/v1/auth",
+    baseURL: `${BASE_URL}/auth`,
     withCredentials: true
 })
 

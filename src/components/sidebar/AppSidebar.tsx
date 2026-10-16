@@ -16,6 +16,10 @@ import { userService } from "@/service/user"
 import { Button } from "../ui/button"
 import { useAuth } from "@/hooks/useAuth"
 import { Separator } from "../ui/separator"
+import AlertDialogModal from "../alert/AlertDialogModal"
+import { useState } from "react"
+import { AlertDialog } from "../ui/alert-dialog"
+import { DialogTrigger } from "../ui/dialog"
 
 const data = {
   navMain: [
@@ -75,6 +79,7 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const user = useUser()
   const { logout } = useAuth()
+  const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const { data: userImg } = useQuery({
     queryKey: ["user-img", user.data?.email],
@@ -103,7 +108,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       <SidebarContent className="bg-sidebar">
         <NavMain items={data.navMain} />
-        <Separator className="mt-2 mb-2"/>
+        <Separator className="mt-2 mb-2" />
         <NavAdmin items={data.admin} />
       </SidebarContent>
 
@@ -114,11 +119,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <AvatarFallback className="rounded-lg">
               {userData ? userData.fullName.substring(0, 2).toUpperCase()
                 :
-              <ShieldQuestion />}
+                <ShieldQuestion />}
             </AvatarFallback>
           </Avatar>
-          <h2>{userData ? "Olá " + userData.fullName : "Faça login"}</h2>
-          {user && <Button size="sm" onClick={logout} variant="link">Sair</Button>}
+          <h2>{userData ? "Olá " + userData.fullName.slice(0, userData.fullName.indexOf(" ")) : "Faça login"}</h2>
+          {user.data?.email &&
+            <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+              <DialogTrigger render={
+                <Button variant="link" className="flex-1"
+                >
+                  Sair
+                </Button>
+              } />
+              <AlertDialogModal key={user.data?.email} isOpen={setIsOpen} onConfirm={logout}
+                title="Deseja sair?"
+                message="Você será redirecionado para o Login" />
+            </AlertDialog> }
         </div>
         <SidebarContent>
           <NavAccount items={data.account} />

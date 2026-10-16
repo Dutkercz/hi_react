@@ -19,6 +19,7 @@ export type ClientResponse = {
     id: number
     firstName: string
     lastName: string
+    createdAt: string
 }
 
 export type ClientUpdate = {

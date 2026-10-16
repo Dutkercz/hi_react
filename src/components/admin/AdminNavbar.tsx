@@ -13,13 +13,13 @@ export function AdminNavigation() {
     return (
         <NavigationMenu 
         className="mx-auto w-full max-w-none border-b border-border px-2 py-2">
-            <NavigationMenuList className="w-full gap-2 sm:gap-3">
+            <NavigationMenuList className="w-full flex-wrap justify-center gap-2 sm:gap-3">
             <NavigationMenuItem>
                     <NavigationMenuLink
                         render={<NavLink to="/admin" />}
                         className={cn(
                             navigationMenuTriggerStyle(),
-                            "group h-10 w-full gap-2 rounded-xl border border-transparent px-4 text-muted-foreground shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-border hover:bg-background hover:text-foreground hover:shadow-md data-active:border-primary/20 data-active:bg-primary/10 data-active:text-primary data-active:shadow-sm sm:w-auto"
+                            "group h-auto min-h-10 w-full gap-2 rounded-xl border border-transparent px-2 text-center text-xs text-muted-foreground shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-border hover:bg-background hover:text-foreground hover:shadow-md data-active:border-primary/20 data-active:bg-primary/10 data-active:text-primary data-active:shadow-sm sm:w-auto sm:px-4 sm:text-sm"
                         )}
                     >
                         <LayoutDashboard className="size-4 transition-transform duration-200 group-hover:scale-110" />
@@ -32,7 +32,7 @@ export function AdminNavigation() {
                         render={<NavLink to="/admin/rooms" />}
                         className={cn(
                             navigationMenuTriggerStyle(),
-                            "group h-10 w-full gap-2 rounded-xl border border-transparent px-4 text-muted-foreground shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-border hover:bg-background hover:text-foreground hover:shadow-md data-active:border-primary/20 data-active:bg-primary/10 data-active:text-primary data-active:shadow-sm sm:w-auto"
+                            "group h-auto min-h-10 w-full gap-2 rounded-xl border border-transparent px-2 text-center text-xs text-muted-foreground shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-border hover:bg-background hover:text-foreground hover:shadow-md data-active:border-primary/20 data-active:bg-primary/10 data-active:text-primary data-active:shadow-sm sm:w-auto sm:px-4 sm:text-sm"
                         )}
                     >
                         <Bed className="size-4 transition-transform duration-200 group-hover:scale-110" />
@@ -45,7 +45,7 @@ export function AdminNavigation() {
                         render={<NavLink to="/admin/daily-prices" />}
                         className={cn(
                             navigationMenuTriggerStyle(),
-                            "group h-10 w-full gap-2 rounded-xl border border-transparent px-4 text-muted-foreground shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-border hover:bg-background hover:text-foreground hover:shadow-md data-active:border-primary/20 data-active:bg-primary/10 data-active:text-primary data-active:shadow-sm sm:w-auto"
+                            "group h-auto min-h-10 w-full gap-2 rounded-xl border border-transparent px-2 text-center text-xs text-muted-foreground shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-border hover:bg-background hover:text-foreground hover:shadow-md data-active:border-primary/20 data-active:bg-primary/10 data-active:text-primary data-active:shadow-sm sm:w-auto sm:px-4 sm:text-sm"
                         )}
                     >
                         <ReceiptText className="size-4 transition-transform duration-200 group-hover:scale-110" />
@@ -58,7 +58,7 @@ export function AdminNavigation() {
                         render={<NavLink to="/admin/register-user" />}
                         className={cn(
                             navigationMenuTriggerStyle(),
-                            "group h-10 w-full gap-2 rounded-xl border border-transparent px-4 text-muted-foreground shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-border hover:bg-background hover:text-foreground hover:shadow-md data-active:border-primary/20 data-active:bg-primary/10 data-active:text-primary data-active:shadow-sm sm:w-auto"
+                            "group h-auto min-h-10 w-full gap-2 rounded-xl border border-transparent px-2 text-center text-xs text-muted-foreground shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-border hover:bg-background hover:text-foreground hover:shadow-md data-active:border-primary/20 data-active:bg-primary/10 data-active:text-primary data-active:shadow-sm sm:w-auto sm:px-4 sm:text-sm"
                         )}
                     >
                         <ReceiptText className="size-4 transition-transform duration-200 group-hover:scale-110" />

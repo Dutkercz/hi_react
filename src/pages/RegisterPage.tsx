@@ -30,6 +30,7 @@ const RegisterPage = () => {
   }
 
   const handleOnSubmit = (data: ClientRequest) => {
+    console.log("Dados do formulário:", data.cnpj)
     onSubmit(data)
   }
 
@@ -52,9 +53,9 @@ const RegisterPage = () => {
   }
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-4">
+    <div className="flex min-h-screen w-full items-start justify-center p-3 sm:items-center sm:p-4">
 
-      <div className="w-full max-w-xl p-4 bg-muted/60">
+      <div className="w-full max-w-xl rounded-xl bg-muted/60 p-4 shadow-sm sm:p-6">
         <form onSubmit={form.handleSubmit(handleOnSubmit, (err) => console.log("Erros do Form:", err))}>
           <FieldGroup >
             <FieldSet>
@@ -122,7 +123,7 @@ const RegisterPage = () => {
                     </Field>
                   )} />
 
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-2">
 
                   <Controller
                     control={form.control}
@@ -166,7 +167,7 @@ const RegisterPage = () => {
                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                       </Field>
                     )} />
-                  <CardDescription className="flex-col col-span-2">
+                  <CardDescription className="flex-col sm:col-span-2">
                     <i>campos marcados com * são obrigatórios</i>
                   </CardDescription>
                 </div>
@@ -181,11 +182,11 @@ const RegisterPage = () => {
                 <i>não obrigatórias</i>
               </FieldDescription>
               <FieldGroup>
-                <div className="grid grid-cols-2 items-center justify-center gap-4">
+                <div className="grid grid-cols-1 items-center justify-center gap-4 sm:grid-cols-2">
 
-                  <div className="flex items-end justify-center col-span-2 gap-2 w-full">
+                  <div className="col-span-full flex w-full items-end justify-center gap-2">
 
-                    <div className="flex-3">
+                    <div className="min-w-0 flex-1">
                       <Controller
                         control={form.control}
                         name={`addresses.${0}.zipCode`}
@@ -202,7 +203,7 @@ const RegisterPage = () => {
                         )}
                       />
                     </div>
-                    <Button className="flex-2" onClick={handleFindCep}>
+                    <Button className="shrink-0" type="button" onClick={handleFindCep}>
                       Buscar
                     </Button>
                   </div>

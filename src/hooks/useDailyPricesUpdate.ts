@@ -19,9 +19,9 @@ export const useDailyPricesUpdate = () => {
 
     const form = useForm({
         resolver: zodResolver(dailyPricesUpdateSchema),
-        defaultValues: {
-            id: lastDailyPrice?.id?? 1,
-            oneGuestPrice: lastDailyPrice?.oneGuestPrice?? 0,
+        values: {
+            id: lastDailyPrice?.id,
+            oneGuestPrice: lastDailyPrice?.oneGuestPrice,
             twoGuestPrice: lastDailyPrice?.twoGuestPrice,
             threeGuestPrice: lastDailyPrice?.threeGuestPrice,
             fourGuestPrice: lastDailyPrice?.fourGuestPrice

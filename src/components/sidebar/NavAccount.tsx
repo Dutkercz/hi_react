@@ -25,7 +25,8 @@ const NavAccount = ({ items }: NavAccountProps) => {
               render={<Link to={item.url} />}
               tooltip={item.title}
               isActive={isActive}
-              className={isActive ? "min-w-8 bg-primary text-primary-foreground duration-300 transform transition ease-linear hover:bg-primary/90 hover:text-primary-foreground scale-110 active:bg-primary/90 active:text-primary-foreground" : ""}
+              className={isActive ? 
+                "min-w-8 bg-primary text-primary-foreground duration-300 transform transition ease-linear hover:bg-primary/90 hover:text-primary-foreground scale-110 active:bg-primary/90 active:text-primary-foreground" : ""}
             >
               {item.icon}
               <span>{item.title}</span>

@@ -16,10 +16,14 @@ export const registerClientSchema = z.object({
         .string()
         .regex(/^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/, "CPF fora do formato esperado")
         .transform((val) => val.replace(/[.-]/g, "")),
-    cnpj: z
-        .string()
-        .regex(/^\d{2}.?\d{3}.?\d{3}-?\d{4}\/?\d{2} ?$/, "CNPJ fora do formato esperado")
-        .or(z.literal(""))
+    cnpj: z.string()
+        .trim()
+        .regex(
+        /^[A-Za-z0-9]{2}\.?[A-Za-z0-9]{3}\.?[A-Za-z0-9]{3}\/?[A-Za-z0-9]{4}-?[A-Za-z0-9]{2}$/, 
+        "CNPJ fora do formato esperado"
+        )
+        .transform((val) => val.replace(/[.\-/]/g, ""))
+        .refine((val) => val.length === 14, "O CNPJ deve ter exatamente 14 caracteres")
         .optional(),
     phoneNumber: z
         .string()

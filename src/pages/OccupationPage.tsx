@@ -47,7 +47,6 @@ const OccupationPage = () => {
     const start = new Date(stay.checkIn)
 
 
-
     const end = new Date(stay.checkOut)
     end.setDate(end.getDate() - 1);
 
@@ -85,23 +84,22 @@ const OccupationPage = () => {
 
   return (
     <div className="flex m-1 h-full flex-col gap-4 rounded-2xl border border-border/70 bg-card/80 p-4 shadow-sm">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-
-        <div className="flex items-center justify-center p-2 gap-4">
-          <div className="flex-3">
-            <h2 className="text-lg font-semibold text-foreground">Tabela de hospedagem</h2>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="flex w-full flex-col gap-3 p-2 sm:flex-row sm:items-center sm:gap-4">
+          <div className="min-w-0 flex-1">
+            <h2 className="text-base font-semibold text-foreground sm:text-lg">Tabela de hospedagem</h2>
             <p className="text-sm text-muted-foreground">
               Visualização da ocupação por quarto e dia em {monthLabel}
             </p>
           </div>
 
-          <div className="flex-1">
-            <Input className="border-2 rounded-lg bg-muted p-2" type="month"
+          <div className="w-full sm:w-auto sm:flex-none">
+            <Input className="w-full rounded-lg border-2 bg-muted p-2 sm:w-auto" type="month"
               value={selectedDate} onChange={handleChangeDate}
             />
           </div>
 
-          <div className="flex flex-1 gap-3 text-xs text-muted-foreground">
+          <div className="flex flex-wrap gap-x-3 gap-y-2 text-xs text-muted-foreground sm:flex-1">
             <div className="flex items-center gap-2">
               <span className="h-2.5 w-2.5 rounded-full bg-chart-1" />
               Disponível
@@ -115,7 +113,7 @@ const OccupationPage = () => {
 
       </div>
 
-      <div className="overflow-x-hidden rounded-lg border bg-background/70">
+      <div className="overflow-x-auto rounded-lg border bg-background/70">
         <div className="min-w-215">
           <div
             className="grid border-b border-border/70 bg-muted/70 text-xs font-semibold uppercase tracking-wide text-muted-foreground"

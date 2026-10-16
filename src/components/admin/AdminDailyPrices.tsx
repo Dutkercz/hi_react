@@ -6,11 +6,12 @@ import { useDailyPricesUpdate } from "@/hooks/useDailyPricesUpdate"
 import SpinnerComp from "../spinner/Spinner"
 import { Controller } from "react-hook-form"
 import { Button } from "../ui/button"
+import { useFormatCurrency } from "@/hooks/useFormatCurrency"
 
 const AdminDailyPrices =  () => {
   
   const { form, onSubmit, isUpdataLoading, isLoading, lastDailyPrice } = useDailyPricesUpdate();
-  
+  const format = useFormatCurrency()
   if (isLoading) return <SpinnerComp />
 
   return (
@@ -42,7 +43,7 @@ const AdminDailyPrices =  () => {
                     </label>
                     <InputNumberFormat
                       {...field}
-                      value={field.value as string | number | undefined}
+                      value={format(field.value as string | number | undefined)}
                       aria-invalid={fieldState.invalid}
                       id="oneGuestPrice"
                       component={Input}
@@ -76,7 +77,7 @@ const AdminDailyPrices =  () => {
                     </label>
                     <InputNumberFormat
                       {...field}
-                      value={field.value as string | number | undefined}
+                      value={format(field.value as string | number | undefined)}
                       aria-invalid={fieldState.invalid}
                       id="twoGuestPrice"
                       component={Input}
@@ -108,7 +109,7 @@ const AdminDailyPrices =  () => {
                     </label>
                     <InputNumberFormat
                       {...field}
-                      value={field.value as string | number | undefined}
+                      value={format(field.value as string | number | undefined)}
                       aria-invalid={fieldState.invalid}
                       id="threeGuestPrice"
                       component={Input}
@@ -140,7 +141,7 @@ const AdminDailyPrices =  () => {
                     </label>
                     <InputNumberFormat
                       {...field}
-                      value={field.value as string | number | undefined}
+                      value={format(field.value as string | number | undefined)}
                       aria-invalid={fieldState.invalid}
                       id="fourGuestPrice"
                       component={Input}
@@ -155,7 +156,7 @@ const AdminDailyPrices =  () => {
                   </Field>
                 )} />
             </CardContent>
-            <CardFooter className="flex items-center justify-center col-span-4">
+            <CardFooter className="col-span-full flex items-center justify-center">
               <Button disabled={isUpdataLoading} type="submit" size="lg">
                 Salvar Novos valores
               </Button>

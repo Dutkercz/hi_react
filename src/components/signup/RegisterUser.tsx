@@ -17,15 +17,15 @@ import { Input } from "@/components/ui/input"
 import { useRegisterUserForm } from "@/hooks/useRegisterUser"
 import { Controller } from "react-hook-form"
 
-const UserSignupForm = ({ ...props }: React.ComponentProps<typeof Card>) => {
+const RegisterUser = ({ ...props }: React.ComponentProps<typeof Card>) => {
   const { form, onSubmit, isLoading } = useRegisterUserForm()
 
   return (
     <Card {...props}>
-      <CardHeader>
-        <CardTitle>Create an account</CardTitle>
+      <CardHeader className="text-center">
+        <CardTitle>Cadastrar Funcionário</CardTitle>
         <CardDescription>
-          Enter your information below to create your account
+          Entre com as informações do funcionário
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -119,12 +119,6 @@ const UserSignupForm = ({ ...props }: React.ComponentProps<typeof Card>) => {
             <FieldGroup>
               <Field>
                 <Button disabled={isLoading} type="submit">Cadastrar</Button>
-                <Button disabled variant="outline" type="button">
-                  Sign up with Google
-                </Button>
-                <FieldDescription className="px-6 text-center">
-                  Já tem conta? <a href="/login">Acesse</a>
-                </FieldDescription>
               </Field>
             </FieldGroup>
           </FieldGroup>
@@ -133,4 +127,4 @@ const UserSignupForm = ({ ...props }: React.ComponentProps<typeof Card>) => {
     </Card>
   )
 }
-export default UserSignupForm
+export default RegisterUser
