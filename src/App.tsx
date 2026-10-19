@@ -15,6 +15,7 @@ import MyAccountPage from "./pages/MyAccountPage"
 import RegisterUserPage from "./pages/RegisterUserPage"
 import AdminDailyPrices from "./components/admin/AdminDailyPrices"
 import SearchPage from "./pages/SearchPage"
+import NotFoundPage from "./pages/NotFoundPage"
 
 
 const App = () => {
@@ -39,6 +40,7 @@ const App = () => {
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/search" element={<SearchPage />} />
+                <Route path="*" element={<NotFoundPage />} />
 
                 <Route path="/admin" element={
                   <ProtectedRoute>
