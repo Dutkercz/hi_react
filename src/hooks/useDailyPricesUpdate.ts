@@ -1,4 +1,4 @@
-import { dailyPricesUpdateSchema } from "@/schemas/dailyPricesUpdateSchema"
+import { dailyPricesUpdateSchema, type DailyPricesUpdateSchema } from "@/schemas/dailyPricesUpdateSchema"
 import { adminService } from "@/service/admin"
 import type { DailyPricesUpdate } from "@/types/admin"
 import type { BackendError } from "@/types/backendError"
@@ -7,9 +7,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import type { AxiosError } from "axios"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
+import { useFormatCurrency } from "./useFormatCurrency"
 
 export const useDailyPricesUpdate = () => {
     const queryClient = useQueryClient()
+    const format = useFormatCurrency()
 
     const { data: lastDailyPrice, isLoading } = useQuery({
         queryKey: ["daily-prices"],
@@ -21,10 +23,10 @@ export const useDailyPricesUpdate = () => {
         resolver: zodResolver(dailyPricesUpdateSchema),
         values: {
             id: lastDailyPrice?.id,
-            oneGuestPrice: lastDailyPrice?.oneGuestPrice,
-            twoGuestPrice: lastDailyPrice?.twoGuestPrice,
-            threeGuestPrice: lastDailyPrice?.threeGuestPrice,
-            fourGuestPrice: lastDailyPrice?.fourGuestPrice
+            oneGuestPrice: format(lastDailyPrice?.oneGuestPrice ?? 0),
+            twoGuestPrice: format(lastDailyPrice?.twoGuestPrice ?? 0),
+            threeGuestPrice: format(lastDailyPrice?.threeGuestPrice ?? 0),
+            fourGuestPrice: format(lastDailyPrice?.fourGuestPrice ?? 0)
         }
     })
 
@@ -39,8 +41,14 @@ export const useDailyPricesUpdate = () => {
         }
     })
 
-    const onSubmit = (data : DailyPricesUpdate) => {
-        updatePricesMutation.mutate(data)
+    const onSubmit = (data: DailyPricesUpdateSchema) => {
+        updatePricesMutation.mutate({
+            ...data,
+            oneGuestPrice: data.oneGuestPrice / 100,
+            twoGuestPrice: data.twoGuestPrice / 100,
+            threeGuestPrice: data.threeGuestPrice / 100,
+            fourGuestPrice: data.fourGuestPrice / 100
+        })
     }
 
     const isUpdataLoading = updatePricesMutation.isPending
