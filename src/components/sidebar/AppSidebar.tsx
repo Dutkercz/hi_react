@@ -20,6 +20,7 @@ import AlertDialogModal from "../alert/AlertDialogModal"
 import { useState } from "react"
 import { AlertDialog } from "../ui/alert-dialog"
 import { DialogTrigger } from "../ui/dialog"
+import { Link } from "react-router-dom"
 
 const data = {
   navMain: [
@@ -122,7 +123,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <ShieldQuestion />}
             </AvatarFallback>
           </Avatar>
-          <h2>{userData ? "Olá " + userData.fullName.slice(0, userData.fullName.indexOf(" ")) : "Faça login"}</h2>
+          {userData ?
+            <h2>Olá  { userData.fullName.slice(0, userData.fullName.indexOf(" "))}</h2>
+            :
+            <Link to="/login">
+              <Button variant="ghost">
+                Faça login
+              </Button>
+            </Link>
+          }
           {user.data?.email &&
             <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
               <DialogTrigger render={
@@ -134,7 +143,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <AlertDialogModal key={user.data?.email} isOpen={setIsOpen} onConfirm={logout}
                 title="Deseja sair?"
                 message="Você será redirecionado para o Login" />
-            </AlertDialog> }
+            </AlertDialog>}
         </div>
         <SidebarContent>
           <NavAccount items={data.account} />

@@ -21,7 +21,7 @@ const LoginPage = ({ className, ...props }: React.ComponentProps<"div">) => {
             <CardHeader className='text-center'>
               <CardTitle>Faça Login na sua conta</CardTitle>
               <CardDescription>
-                Entre com seu email e senha abaixo.
+                Entre com seu email e senha.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -72,9 +72,6 @@ const LoginPage = ({ className, ...props }: React.ComponentProps<"div">) => {
                   />
                   <Field>
                     <Button disabled={isLoading} type="submit">Acessar</Button>
-                    <Button disabled={true} variant="outline" type="button">
-                      Login with Google
-                    </Button>
                   </Field>
                 </FieldGroup>
               </form>
