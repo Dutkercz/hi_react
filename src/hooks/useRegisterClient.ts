@@ -1,14 +1,20 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
-import { updateClientSchema } from "../schemas/clientUpdateSchema"
 import { clientService } from "@/service/client"
-import type { ClientRequest, ClientResponse, ClientUpdate } from "@/types/client"
+import type { ClientRequest } from "@/types/client"
 import { registerClientSchema } from "../schemas/clientRequestSchema"
+import type { CepResponseData } from "@/types/cep"
+import { cepService } from "@/service/cep"
 
-export const useRegisterClientForm = () => {
+
+export type UserRegisterClientProps = {
+    index: number
+}
+
+export const useRegisterClient = ({ index }: UserRegisterClientProps) => {
     const form = useForm<ClientRequest>({
         resolver: zodResolver(registerClientSchema),
         defaultValues: {
@@ -37,36 +43,24 @@ export const useRegisterClientForm = () => {
         registerMutation.mutate(data)
     }
 
-    return { form, onSubmit }
-}
 
-export const useUpdateClientForm = (client: ClientResponse) => {
-    const form = useForm<ClientUpdate>({
-        resolver: zodResolver(updateClientSchema),
-        defaultValues: {
-            id: client.id,
-            firstName: client.firstName ?? "",
-            lastName: client.lastName ?? "",
-        },
-        shouldUnregister: true
-
-    })
-
-    const queryClient = useQueryClient()
-
-    const updateMutation = useMutation({
-        mutationKey: ["clients"],
-        mutationFn: (client: ClientUpdate) => clientService.updateClient(client),
-        onSuccess: () => {
-            toast.success("Cliente cadastrado com sucesso!")
-            form.reset()
-            queryClient.invalidateQueries({ queryKey: ["clients"] })
+    const findCepMutation = useMutation({
+        mutationKey: ['cep'],
+        mutationFn: (cep: string) => cepService.findCep(cep),
+        onSuccess: (data: CepResponseData) => {
+            form.setValue(`addresses.${index}.zipCode`, data.zipCode ?? "")
+            form.setValue(`addresses.${index}.street`, data.street ?? "")
+            form.setValue(`addresses.${index}.city`, data.city ?? "")
+            form.setValue(`addresses.${index}.state`, data.state ?? "")
         }
     })
 
-    const submit = (client: ClientUpdate) => {
-        updateMutation.mutate(client)
+    const handleFindCep = () => {
+        const cep = form.getValues().addresses[index].zipCode
+        if (cep) {
+            findCepMutation.mutate(cep)
+        }
     }
 
-    return { form, submit }
+    return { form, onSubmit, handleFindCep }
 }

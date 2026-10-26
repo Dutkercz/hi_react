@@ -12,15 +12,27 @@ import type { AxiosError } from "axios"
 import type { BackendError } from "@/types/backendError"
 
 export const useStayRequest = (id: number, setOpen: (v: boolean) => void) => {
+
+    const defaultdate = () => {
+        const agora = new Date();
+        const ano = agora.getFullYear();
+        const mes = String(agora.getMonth() + 1).padStart(2, '0');
+        const dia = String(agora.getDate()).padStart(2, '0');
+        const horas = String(agora.getHours()).padStart(2, '0');
+        const minutos = String(agora.getMinutes()).padStart(2, '0');
+        return `${ano}-${mes}-${dia}T${horas}:${minutos}`;
+    }
+
     const form = useForm<StayRequest>({
         resolver: zodResolver(staySchema),
         defaultValues: {
             clientId: undefined,
             roomId: id,
-            checkIn: "",
+            checkIn: defaultdate(),
             checkOut: "",
             totalGuests: 1,
             isPaid: false,
+            method:  "PIX" ,
             stayGuests: [],
         },
         shouldUnregister: true,

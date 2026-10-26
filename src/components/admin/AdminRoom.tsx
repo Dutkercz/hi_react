@@ -7,6 +7,7 @@ import { toast } from "sonner"
 import AdminRoomCard from "./AdminRoomCard"
 import { roomService } from "@/service/room"
 import type { RoomUpdateRequest } from "@/types/room"
+import { Button } from "../ui/button"
 
 const AdminRoom = () => {
 
@@ -35,6 +36,21 @@ const AdminRoom = () => {
         updateRoomConfigMutation.mutate({ id, room })
     }
 
+    const addRoomMutation = useMutation({
+        mutationFn: () => roomService.addRoom(),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['rooms'] })
+            toast.success("Sucesso ao adicionar novo Apartamento")
+        },
+        onError: (error : AxiosError<BackendError>) => {
+            toast.error("Erro ao adicionar apartamento: " + error.response?.data.detail)
+        }
+    })
+
+    const handleAddRoom = () => {
+        addRoomMutation.mutate()
+    }
+
     if (isLoading) return <SpinnerComp />
     if (isError) return <div>Erro</div>
 
@@ -48,6 +64,11 @@ const AdminRoom = () => {
                         <AdminRoomCard onSubmit={handleSubmitEdit} room={room} key={room.id} />
                     </div>
                 ))}
+                <div className="flex items-center justify-center border bg-muted rounded-lg">
+                    <Button 
+                    
+                    onClick={handleAddRoom} >Adicionar Apartamento</Button>
+                </div>
             </div>
         </div>
     )

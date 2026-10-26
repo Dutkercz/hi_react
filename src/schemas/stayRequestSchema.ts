@@ -14,6 +14,7 @@ export const staySchema = z.object({
     stayGuests: array(
         z.object({ name: z.string() })),
     isPaid: z.boolean(),
+    method:  z.enum(['PIX', 'CREDIT_CARD', 'DEBIT_CARD', 'CASH'], 'O campo forma de pagamento é obrigatório.'),
     checkIn: z
         .string()
         .nonempty({ message: 'O campo data de checkin não pode estar em branco.' })

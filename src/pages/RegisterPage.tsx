@@ -12,51 +12,24 @@ import {
   FieldSet,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { useRegisterClientForm } from "@/hooks/useRegisterClient"
-import { cepService } from "@/service/cep"
-import type { CepResponseData } from "@/types/cep"
-import type { ClientRequest } from "@/types/client"
+import { useRegisterClient } from "@/hooks/useRegisterClient"
 import InputMask from "@react-input/mask/InputMask"
-import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
 import { Controller } from "react-hook-form"
 
 const RegisterPage = () => {
-  const { form, onSubmit } = useRegisterClientForm()
+  const { form, onSubmit, handleFindCep } = useRegisterClient({ index: 0 })
   const [controlCheckBox, setControlCheckBox] = useState(false)
 
   const handleCheckBox = () => {
     setControlCheckBox((v) => !v)
   }
 
-  const handleOnSubmit = (data: ClientRequest) => {
-    console.log("Dados do formulário:", data.cnpj)
-    onSubmit(data)
-  }
-
-  const findCepMutation = useMutation({
-    mutationKey: ['cep'],
-    mutationFn: (cep: string) => cepService.findCep(cep),
-    onSuccess: (data: CepResponseData) => {
-      form.setValue(`addresses.${0}.zipCode`, data.zipCode ?? "")
-      form.setValue(`addresses.${0}.street`, data.street ?? "")
-      form.setValue(`addresses.${0}.city`, data.city ?? "")
-      form.setValue(`addresses.${0}.state`, data.state ?? "")
-    }
-  })
-
-  const handleFindCep = () => {
-    const cep = form.getValues().addresses[0].zipCode
-    if (cep) {
-      findCepMutation.mutate(cep)
-    }
-  }
-
   return (
     <div className="flex min-h-screen w-full items-start justify-center p-3 sm:items-center sm:p-4">
 
       <div className="w-full max-w-xl rounded-xl bg-muted/60 p-4 shadow-sm sm:p-6">
-        <form onSubmit={form.handleSubmit(handleOnSubmit, (err) => console.log("Erros do Form:", err))}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup >
             <FieldSet>
               <FieldLegend className="text-center">Cadastro de Clientes</FieldLegend>

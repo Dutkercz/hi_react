@@ -3,25 +3,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { adminService } from "@/service/admin"
-import { useQuery } from "@tanstack/react-query"
 import { Search, UserRound } from "lucide-react"
-import { useState } from "react"
-import { useDebounce } from 'use-debounce';
 import { Separator } from "@/components/ui/separator"
+import { useSearchPage } from "@/hooks/useSearchPage"
 
 const SearchPage = () => {
-  const [search, setSearch] = useState("")
-  const [debouncedSearch] = useDebounce(search, 300);
-
-  const { data: results, isLoading, isError } = useQuery({
-    queryKey: ['search-guests', debouncedSearch],
-    queryFn: () => {
-      return adminService.infoSearch(debouncedSearch)
-    },
-    enabled: debouncedSearch.trim().length > 0,
-    refetchOnWindowFocus: false,
-  })
+  const {search, setSearch, debouncedSearch, results, isError, isLoading} = useSearchPage()
 
   return (
     <Card className='min-h-screen bg-background'>

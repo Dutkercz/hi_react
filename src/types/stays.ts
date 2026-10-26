@@ -1,4 +1,4 @@
-import type { Payment } from "./payment"
+import type {PaymentMethod } from "./payment"
 
 export type RefundPayment = {
     amount: number
@@ -11,7 +11,7 @@ export type StayRequest = {
     checkOut: string
     totalGuests: number
     isPaid: boolean
-    payment?: Payment
+    method: PaymentMethod
     stayGuests: StayGuest[]
 }
 

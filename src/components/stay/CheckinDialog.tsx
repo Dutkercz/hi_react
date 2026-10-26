@@ -1,6 +1,6 @@
 import { Button } from '../ui/button'
 import { DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog'
-import { Field, FieldContent, FieldError, FieldGroup, FieldLabel } from '../ui/field'
+import { Field, FieldContent, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSet } from '../ui/field'
 import { Controller, useFieldArray } from "react-hook-form"
 import { Input } from '../ui/input'
 import { useStayRequest } from '@/hooks/useStayRequest'
@@ -9,6 +9,8 @@ import { useEffect } from 'react'
 import { useRoomCard } from '../../hooks/useRoomCard'
 import { Checkbox } from '../ui/checkbox'
 import type { RoomResponse } from '@/types/room'
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
+import { Label } from '../ui/label'
 
 type ManageRoomProps = {
   setOpen: (v: boolean) => void
@@ -177,6 +179,46 @@ const CheckinDialog = ({ setOpen, room }: ManageRoomProps) => {
             )}
           />
 
+          {form.watch("isPaid") &&
+            <Controller
+              name='method'
+              control={form.control}
+              render={({ field, fieldState }) => (
+
+                <FieldSet
+                  {...field}
+                  data-invalid={fieldState.invalid}
+                >
+                  <FieldLegend>Forma de pagamento</FieldLegend>
+                  <RadioGroup
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    className="w-fit">
+
+                    <Field orientation="horizontal">
+                      <RadioGroupItem value="PIX" id="PIX" />
+                      <Label htmlFor="r1">PIX</Label>
+                    </Field>
+                    <Field orientation="horizontal">
+                      <RadioGroupItem value="CREDIT_CARD" id="CREDIT_CARD" />
+                      <Label htmlFor="r2">Cartão Crédito</Label>
+                    </Field>
+                    <Field orientation="horizontal">
+                      <RadioGroupItem value="DEBIT_CARD" id="DEBIT_CARD" />
+                      <Label htmlFor="r3">Cartão Débito</Label>
+                    </Field>
+                    <Field orientation="horizontal">
+                      <RadioGroupItem value="CASH" id="CASH" />
+                      <Label htmlFor="r3">Dinheiro</Label>
+                    </Field>
+                  </RadioGroup>
+
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </FieldSet>
+              )}
+            />
+
+          }
 
           {totalGuests > 1 && (
             <Field className="md:col-span-2 sm:col-span-1 lg:col-span-2 rounded-lg border border-border/70 bg-muted/40 p-4">

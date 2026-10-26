@@ -9,5 +9,9 @@ export const roomService = {
     updateRoomConfig: async (id: number, room: RoomUpdateRequest) => {
         const response = await axiosService.patch(`/rooms/${id}`, room)
         return response.data
+    },
+    addRoom: async () => {
+        const response = await axiosService.post("/rooms")
+        return response.data
     }
 }

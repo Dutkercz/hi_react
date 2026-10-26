@@ -1,8 +1,6 @@
 
-export type Payment = {
-    method: 'PIX' | 'CREDIT_CARD' | 'DEBIT_CARD' | 'CASH'
-    amount: number
-}
+export type PaymentMethod = 'PIX' | 'CREDIT_CARD' | 'DEBIT_CARD' | 'CASH'
+
 
 export type StayPayment = {
     amount: number
