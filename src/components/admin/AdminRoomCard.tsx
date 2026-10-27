@@ -6,19 +6,23 @@ import { AlertDialog } from "@/components/ui/alert-dialog"
 import { DialogTrigger } from "@/components/ui/dialog"
 import type { RoomResponse, RoomUpdateRequest } from "@/types/room"
 import AlertDialogModal from "../alert/AlertDialogModal"
+import { Trash2 } from "lucide-react"
+import { CardTitle } from "../ui/card"
 type AdminRoomCardType = {
     room: RoomResponse
-    onSubmit: (id: number, roomUpdate: RoomUpdateRequest) => void
+    onSubmitEdit: (id: number, roomUpdate: RoomUpdateRequest) => void
+    onSubmitDelete: (id: number) => void
 }
 
-const AdminRoomCard = ({ room, onSubmit }: AdminRoomCardType) => {
+const AdminRoomCard = ({ room, onSubmitEdit, onSubmitDelete }: AdminRoomCardType) => {
 
     const [singleBeds, setSingleBeds] = useState(room.singleBeds)
     const [doubleBeds, setDoubleBeds] = useState(room.doubleBeds)
     const [alertOpen, setAlertOpen] = useState(false)
+    const [deleteOpen, setDeleteOpen] = useState(false)
 
     const handleSave = () => {
-        onSubmit(room.id, {
+        onSubmitEdit(room.id, {
             singleBeds: Number(singleBeds),
             doubleBeds: Number(doubleBeds)
         })
@@ -27,7 +31,19 @@ const AdminRoomCard = ({ room, onSubmit }: AdminRoomCardType) => {
     return (
         <div>
             <div className="flex-col m-1">
-                <p className="text-center">Apartamento </p>
+                <div className="flex items-center justify-center">
+                    <CardTitle className="flex-2">Apartamento </CardTitle>
+                    <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+                        <DialogTrigger nativeButton={false} render={
+                            <Trash2 size="18">
+                                <Button className="flex-1 text-destructive/80" />
+                            </Trash2>
+                        } />
+
+                        <AlertDialogModal key={room.id} isOpen={setDeleteOpen} onConfirm={() => onSubmitDelete(room.id)} title='Deletar Apartamento'
+                            message={`Deseja excluir o apartamento ${room.roomNumber}`} />
+                    </AlertDialog>
+                </div>
                 <span
                     className="flex justify-center text-muted-foreground p-0.5 text-xl">
                     {room.roomNumber}
@@ -62,7 +78,7 @@ const AdminRoomCard = ({ room, onSubmit }: AdminRoomCardType) => {
             <div className="flex mb-1 justify-center">
                 <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
                     <DialogTrigger render={
-                        <Button className="flex-1"
+                        <Button className="flex-2"
                         >
                             Atualizar
                         </Button>
@@ -71,7 +87,7 @@ const AdminRoomCard = ({ room, onSubmit }: AdminRoomCardType) => {
                         message={`Deseja atualizar a configuração do apartamento ${room.roomNumber}`} />
                 </AlertDialog>
             </div>
-        </div>
+        </div >
     )
 }
 

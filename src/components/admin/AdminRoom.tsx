@@ -8,6 +8,7 @@ import AdminRoomCard from "./AdminRoomCard"
 import { roomService } from "@/service/room"
 import type { RoomUpdateRequest } from "@/types/room"
 import { Button } from "../ui/button"
+import ErrorComp from "../error/ErrorComp"
 
 const AdminRoom = () => {
 
@@ -42,7 +43,7 @@ const AdminRoom = () => {
             queryClient.invalidateQueries({ queryKey: ['rooms'] })
             toast.success("Sucesso ao adicionar novo Apartamento")
         },
-        onError: (error : AxiosError<BackendError>) => {
+        onError: (error: AxiosError<BackendError>) => {
             toast.error("Erro ao adicionar apartamento: " + error.response?.data.detail)
         }
     })
@@ -51,8 +52,23 @@ const AdminRoom = () => {
         addRoomMutation.mutate()
     }
 
+    const deleteRoomMutation = useMutation({
+        mutationFn: (id: number) => roomService.deleteRoom(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["rooms"] })
+            toast.success("Sucesso ao excluir Apartamento")
+        },
+        onError: (error: AxiosError<BackendError>) => {
+            toast.error("Erro ao excluir apartamento: " + error.response?.data.detail)
+        }
+    })
+
+    const handleDeleteRoom = (id: number) => {
+        deleteRoomMutation.mutate(id)
+    }
+
     if (isLoading) return <SpinnerComp />
-    if (isError) return <div>Erro</div>
+    if (isError) return <ErrorComp />
 
     return (
         <div>
@@ -61,13 +77,14 @@ const AdminRoom = () => {
             <div className="grid gap-2 m-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {rooms?.map((room) => (
                     <div key={room.id} className="p-2 border bg-muted rounded-lg">
-                        <AdminRoomCard onSubmit={handleSubmitEdit} room={room} key={room.id} />
+                        <AdminRoomCard onSubmitEdit={handleSubmitEdit} onSubmitDelete={handleDeleteRoom}
+                        room={room} key={room.id} />
                     </div>
                 ))}
                 <div className="flex items-center justify-center border bg-muted rounded-lg">
-                    <Button 
-                    
-                    onClick={handleAddRoom} >Adicionar Apartamento</Button>
+                    <Button
+
+                        onClick={handleAddRoom} >Adicionar Apartamento</Button>
                 </div>
             </div>
         </div>

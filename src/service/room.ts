@@ -13,5 +13,9 @@ export const roomService = {
     addRoom: async () => {
         const response = await axiosService.post("/rooms")
         return response.data
+    },
+    deleteRoom: async (id: number) => {
+        const response = await axiosService.delete(`/rooms/${id}`)
+        return response.data
     }
 }
