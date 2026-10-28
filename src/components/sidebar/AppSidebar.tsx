@@ -40,15 +40,15 @@ const data = {
       icon: <UsersIcon />,
     },
     {
-      title: "Get Help",
+      title: "Buscar",
+      url: "/search",
+      icon: <SearchIcon />,
+    },
+    {
+      title: "Ajude-me",
       url: "/help-page",
       icon: <CircleHelpIcon />
       ,
-    },
-    {
-      title: "Search",
-      url: "/search",
-      icon: <SearchIcon />,
     },
   ],
   admin: [
@@ -124,7 +124,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </AvatarFallback>
           </Avatar>
           {userData ?
-            <h2>Olá  { userData.fullName.slice(0, userData.fullName.indexOf(" "))}</h2>
+            <h2>Olá  { userData.fullName.split(" ")[0]}</h2>
             :
             <Link to="/login">
               <Button variant="ghost">

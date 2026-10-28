@@ -3,9 +3,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { Search, UserRound } from "lucide-react"
+import { Search } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import { useSearchPage } from "@/hooks/useSearchPage"
+import { SearchResultCard } from "@/components/search/SearchResultCard"
 
 const SearchPage = () => {
   const {search, setSearch, debouncedSearch, results, isError, isLoading} = useSearchPage()
@@ -44,44 +45,27 @@ const SearchPage = () => {
 
           <div className="max-h-[60vh] space-y-2 overflow-y-auto">
             {isLoading && debouncedSearch.trim().length > 0 ? (
-              <div className="flex flex-col items-center gap-2 rounded-lg border bg-background px-4 py-6 text-center">
-                <SpinnerComp />
-                <CardDescription>Buscando clientes...</CardDescription>
+              <div className="bg-background px-4 py-6">
+                <SpinnerComp />             
               </div>
             ) : isError ? (
-              <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive" role="alert">
+              <Card className="text-center text-destructive" role="alert">
                 Erro ao buscar informações. Tente novamente.
-              </div>
+              </Card>
             ) : results && results.length > 0 ? (
               results.map((res) => (
-                <CardContent
-                  key={res.id}
-                  className="flex min-w-0 items-center gap-3 rounded-lg border p-3 shadow-sm transition-colors hover:bg-muted/40 sm:px-4"
-                >
-                  <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                    <UserRound aria-hidden="true" className="size-5" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="wrap-break-word font-medium text-foreground">
-                      {res.firstName} {res.lastName}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground">
-                      Data de cadastro {res.createdAt}
-                    </p>
-                  </div>
-                </CardContent>
+                //Pra não perder o card ;)
+                <SearchResultCard res={res} />
               ))
             ) : debouncedSearch.trim().length > 0 ? (
-              <div className="rounded-lg border px-4 py-6 text-center">
+              <Card className="text-center">
                 <CardDescription>Não encontrei resultados para sua busca.</CardDescription>
-              </div>
+              </Card>
             ) : (
-              <div className="rounded-lg border border-dashed px-4 py-6 text-center">
+              <Card className="text-center">
                 <Search aria-hidden="true" className="mx-auto mb-2 size-5 text-muted-foreground" />
                 <CardDescription>Digite um nome, CPF ou CNPJ para consultar os clientes.</CardDescription>
-              </div>
+              </Card>
             )}
           </div>
         </div>

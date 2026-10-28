@@ -14,7 +14,7 @@ type AddPaymentDialogProps = {
 }
 
 const AddPaymentDialog = ({ setOpen, room }: AddPaymentDialogProps) => {
-
+    
     const [amount, setAmount] = useState("")
     const setOpenAndReset = (open: boolean) => {
         if (!open) {
@@ -22,8 +22,9 @@ const AddPaymentDialog = ({ setOpen, room }: AddPaymentDialogProps) => {
         }
         setOpen(open)
     }
-    const { handleSubmit, formatCurrency, remainingPrice, isPending } = useAddPayment({ room, setOpen: setOpenAndReset })
-
+    const { handleSubmit, formatCurrency, remainingPrice, isPending } =
+                            useAddPayment({ room, setOpen: setOpenAndReset })
+    
     return (
         <DialogContent className="gap-5 sm:max-w-md">
             <DialogHeader className="space-y-2 pr-8">

@@ -9,7 +9,7 @@ type SimpleRoomCardProps = {
 const SimpleRoomCard = ({ room }: SimpleRoomCardProps) => {
 
   const clientName = room.stay?.client
-    ? `${room.stay.client.firstName} ${room.stay.client.lastName}`
+    ? `${room.stay.client.firstName} ${room.stay.client.lastName.split(" ")[0]}`
     : null
 
   const roomStatusLabel = {
