@@ -1,6 +1,10 @@
 # Hotel Cris — Front-end
 
-Aplicação web para apoiar a gestão de hospedagens do Hotel Cris. A interface reúne a consulta de quartos e ocupações, o cadastro e a busca de clientes e ferramentas administrativas para acompanhar indicadores e manter quartos e tarifas.
+Aplicação web para a gestão de hospedagens. A interface reúne a consulta de quartos e ocupações, o cadastro e a busca de clientes e ferramentas administrativas para acompanhar indicadores e manter quartos e tarifas.
+
+### Você pode acompanhar também a aplicação em produção [AQUI.](https://hi-react-topaz.vercel.app/)
+
+ (Acesse a area de [ajuda](https://hi-react-topaz.vercel.app/help-page) para opções contato com duvidas ou sugestões)
 
 ## Funcionalidades
 
