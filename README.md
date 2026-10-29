@@ -1,4 +1,4 @@
-# Hotel Cris — Front-end
+# Hotel Manager — Frontend
 
 Aplicação web para a gestão de hospedagens. A interface reúne a consulta de quartos e ocupações, o cadastro e a busca de clientes e ferramentas administrativas para acompanhar indicadores e manter quartos e tarifas.
 
