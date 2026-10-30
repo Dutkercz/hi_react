@@ -1,4 +1,4 @@
-import type {PaymentMethod } from "./payment"
+import type { PaymentMethod } from "./payment"
 
 export type RefundPayment = {
     amount: number

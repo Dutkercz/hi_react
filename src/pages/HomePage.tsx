@@ -42,10 +42,10 @@ const HomePage = () => {
                 <DialogTrigger
                   render={<Button
                     variant='outline'
-                    className='h-auto w-full justify-start whitespace-normal'
+                    className='h-auto min-w-0 w-full justify-start whitespace-normal'
                   />}
                 >
-                  <div className='w-full p-4'>
+                  <div className='p-2'>
                     <SimpleRoomCard room={room} />
                   </div>
                 </DialogTrigger>

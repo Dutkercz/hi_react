@@ -1,4 +1,4 @@
-import { adminService } from "@/service/admin";
+import { clientService } from "@/service/client";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useDebounce } from "use-debounce";
@@ -11,7 +11,7 @@ export const useSearchPage = () => {
     const { data: results, isLoading, isError } = useQuery({
         queryKey: ['search-guests', debouncedSearch],
         queryFn: () => {
-            return adminService.infoSearch(debouncedSearch)
+            return clientService.infoSearch(debouncedSearch)
         },
         enabled: debouncedSearch.trim().length > 0,
         refetchOnWindowFocus: false,

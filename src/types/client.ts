@@ -1,3 +1,6 @@
+import type { AddressResponse } from "./addess"
+import type { StayResponse } from "./room"
+
 export type ClientRequest = {
     firstName: string
     lastName: string
@@ -6,6 +9,19 @@ export type ClientRequest = {
     phoneNumber: string
     addresses: Address[]
 }
+
+export type ClientDetails = {
+    id: number;
+    idClient: string;
+    firstName: string;
+    lastName: string;
+    cnpj: string;
+    phoneNumber: string;
+    status: string;
+    createdAt: string;
+    addresses: AddressResponse[];
+    stays: StayResponse[];
+  }
 
 export type Address = {
     zipCode: string

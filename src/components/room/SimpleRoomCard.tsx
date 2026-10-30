@@ -1,5 +1,5 @@
 import type { RoomResponse } from "@/types/room"
-import { CardDescription } from "../ui/card"
+import { Card, CardDescription } from "../ui/card"
 import { BedDoubleIcon, BedSingle, UserRoundIcon } from "lucide-react"
 
 type SimpleRoomCardProps = {
@@ -28,15 +28,15 @@ const SimpleRoomCard = ({ room }: SimpleRoomCardProps) => {
 
   return (
     <div>
-      <div className='mb-4 flex items-start justify-between gap-3'>
-        <div>
+      <Card className='mb-2 flex items-center justify-center gap-3'>
+        <div className="min-w-0">
           <p className='text-xs font-medium uppercase tracking-wide text-muted-foreground'>Apartamento</p>
           <p className='text-xl font-semibold'>{room.roomNumber ?? '—'}</p>
         </div>
-        <span className={`rounded-lg px-2 py-1 text-xs font-medium ${roomStatusClasses[room.status]}`}>
+        <CardDescription className={` rounded-lg px-2 py-1 text-xs ${roomStatusClasses[room.status]}`}>
           {roomStatusLabel[room.status]}
-        </span>
-      </div>
+        </CardDescription>
+      </Card>
 
       <div className='flex min-w-0 items-center justify-center gap-2 border-t border-border/60 pt-3'>
         {clientName ? (
