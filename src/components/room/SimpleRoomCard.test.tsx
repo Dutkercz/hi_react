@@ -42,6 +42,11 @@ describe("Teste do componente SimpleRoomCard", () => {
 
         expect(screen.getByText("Disponível")).toBeInTheDocument()
         expect(screen.getByText("Apartamento")).toBeInTheDocument()
+        expect(screen.queryByText("Hóspede")).not.toBeInTheDocument()
+        expect(screen.queryByText("Sem hospedagem ativa")).not.toBeInTheDocument()
+        expect(screen.queryByText("Sem diárias")).not.toBeInTheDocument()
+        expect(screen.getByText("2 solteiro")).toBeInTheDocument()
+        expect(screen.getByText("1 casal")).toBeInTheDocument()
         expect(screen.getByText("Clique para ver detalhes")).toBeInTheDocument()
     })
 
@@ -53,7 +58,9 @@ describe("Teste do componente SimpleRoomCard", () => {
         expect(screen.getByText("Ocupado")).toBeInTheDocument()
         expect(screen.getByText("Apartamento")).toBeInTheDocument()
         expect(screen.getByText("1")).toBeInTheDocument()
-        expect(screen.getByText("3 Diárias")).toBeInTheDocument()
+        expect(screen.getByText("2 solteiro")).toBeInTheDocument()
+        expect(screen.getByText("1 casal")).toBeInTheDocument()
+        expect(screen.getByText("3 diárias")).toBeInTheDocument()
         expect(screen.getByText("Clique para ver detalhes")).toBeInTheDocument()
     })
 })
