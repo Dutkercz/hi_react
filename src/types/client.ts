@@ -17,7 +17,7 @@ export type ClientDetails = {
     lastName: string;
     cnpj: string;
     phoneNumber: string;
-    status: string;
+    status: "ACTIVE" | "INACTIVE";
     createdAt: string;
     addresses: AddressResponse[];
     stays: StayResponse[];
