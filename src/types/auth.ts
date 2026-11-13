@@ -13,6 +13,7 @@ export type AuthContextType = {
     isLoading: boolean
     login: (data: LoginResquest) => void
     logout: () => void
+    recoveryPwEmail: (email: string) => void
     form: UseFormReturn<LoginResquest>
     isLogged: boolean
 }

@@ -9,7 +9,8 @@ export const userRequestSchema = z.object({
     .regex(/\d/, "Ao menos 1 digito")
     .regex(/^.{6,100}$/, "Ao menos 6 caracteres"),
     confirmpw: z.string().trim()
-}).refine((data) => data.password === data.confirmpw, 
+})
+.refine((data) => data.password === data.confirmpw, 
     {message: "Você deve repetir a mesma senha", path: ['confirmpw']} )
 
 export type UserRequestSchema = z.infer<typeof userRequestSchema>

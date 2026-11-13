@@ -1,4 +1,4 @@
-import RegisterUser from '@/components/signup/RegisterUser'
+import RegisterUser from '@/components/register/RegisterUser'
 
 const RegisterUserPage = () => {
   return (

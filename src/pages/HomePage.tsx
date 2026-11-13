@@ -38,19 +38,19 @@ const HomePage = () => {
         <CardContent>
           <div className='grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
             {orderedRooms.map((room) => (
-              <Dialog key={room.id}>
-                <DialogTrigger
-                  render={<Button
-                    variant='outline'
-                    className='h-full min-w-0 w-full items-stretch justify-stretch whitespace-normal p-0 text-left hover:bg-transparent'
-                  />}
-                >
-                  <SimpleRoomCard room={room} />
-                </DialogTrigger>
-                <DialogContent className='max-h-[90vh] overflow-y-auto sm:max-w-xl'>
-                  <ExtendedRoomCard room={room} />
-                </DialogContent>
-              </Dialog>
+                <Dialog key={room.id}>
+                  <DialogTrigger
+                    render={<Button
+                      variant='outline'
+                      className='h-full min-w-0 w-full items-stretch justify-stretch whitespace-normal p-0 text-left hover:bg-transparent'
+                    />}
+                  >
+                    <SimpleRoomCard room={room} />
+                  </DialogTrigger>
+                  <DialogContent className='max-h-[90vh] overflow-y-auto sm:max-w-xl'>
+                    <ExtendedRoomCard room={room} />
+                  </DialogContent>
+                </Dialog>
             )
             )}
           </div>

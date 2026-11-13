@@ -16,6 +16,7 @@ import RegisterUserPage from "./pages/RegisterUserPage"
 import AdminDailyPrices from "./components/admin/AdminDailyPrices"
 import SearchPage from "./pages/SearchPage"
 import NotFoundPage from "./pages/NotFoundPage"
+import RedefinePasswordPage from "./pages/RedefinePasswordPage"
 
 
 const App = () => {
@@ -40,6 +41,7 @@ const App = () => {
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/search" element={<SearchPage />} />
+                <Route path="/recovery-new-password" element={<RedefinePasswordPage />} />
                 <Route path="*" element={<NotFoundPage />} />
 
                 <Route path="/admin" element={

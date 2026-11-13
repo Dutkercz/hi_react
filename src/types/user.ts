@@ -16,4 +16,9 @@ export type UserProviderType = {
     isLoading: boolean
 }
 
+export type RecoveryPwDto = {
+    otpCode: string
+    password: string
+}
+
 export type UserRole = "ADMIN" | "USER"

@@ -1,4 +1,4 @@
-import type { UserRequest, UserResponse } from "@/types/user"
+import type { RecoveryPwDto, UserRequest, UserResponse } from "@/types/user"
 import { axiosService } from "./axiosService"
 
 export const userService = {
@@ -27,6 +27,14 @@ export const userService = {
         const response = await axiosService.post<UserResponse>("/users", data, {
             withCredentials: true
         })
+        return response.data
+    },
+    sendRecoveryPwEmail: async (email: string) => {
+        const response = await axiosService.post(`/users/recovery-pw/${email}`)
+        return response.data
+    },
+    recoveryPwRedefine: async (redefineDto : RecoveryPwDto) => {
+        const response = await axiosService.post(`/users/recovery-pw`, redefineDto)
         return response.data
     }
 }

@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { ACCESS_TOKEN_KEY, AUTH_SESSION_EXPIRED_EVENT } from "@/service/axiosService";
+import { userService } from "@/service/user";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
@@ -62,11 +63,27 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     shouldUnregister: true
   })
 
+
+  const requestRecoveryPWEmailMutation = useMutation({
+    mutationFn: (email : string) => userService.sendRecoveryPwEmail(email),
+    onSuccess: () => {
+      toast.success("Se o e-mail for válido, você receberá as instruções de redefinição de senha")
+    },
+    onError: (erro: AxiosError<BackendError>) => {
+      toast.error(erro.response?.data.detail)
+    }
+  })
+
+  const handleRecoveryPwEmail = (email : string) => {
+    requestRecoveryPWEmailMutation.mutate(email)
+  }
+
   return <AuthContext.Provider
     value={{
       login: loginMutation.mutate,
       isLoading: loginMutation.isPending,
       logout: handleLogout,
+      recoveryPwEmail: handleRecoveryPwEmail,
       form: form,
       isLogged: isLogged
     }} >
