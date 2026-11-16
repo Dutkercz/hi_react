@@ -18,7 +18,6 @@ const guestOptions = [1, 2, 3, 4] as const
 
 const ExtendedRoomCard = ({ room }: ExtendedRoomCardProps) => {
   const stay = room.stay
-  const [open, setOpen] = useState(false)
   const [openAddPay, setOpenAddPay] = useState(false)
   const [alertOpen, setAlertOpen] = useState(false)
 
@@ -170,14 +169,14 @@ const ExtendedRoomCard = ({ room }: ExtendedRoomCardProps) => {
                 </AlertDialog>
               </div>
               :
-              <Dialog open={open} onOpenChange={setOpen}>
+              <Dialog open={alertOpen} onOpenChange={setAlertOpen}>
                 <DialogTrigger className="flex-1 flex" render={
                   <Button className="w-full"
-                    onClick={() => setOpen(true)}>
+                    onClick={() => setAlertOpen(true)}>
                     Checkin
                   </Button>}>
                 </DialogTrigger>
-                <CheckinDialog room={room} setOpen={setOpen} />
+                <CheckinDialog room={room} setOpen={setAlertOpen} />
               </Dialog>
             }
           </div>

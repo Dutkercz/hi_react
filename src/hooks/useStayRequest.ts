@@ -81,9 +81,9 @@ export const useStayRequest = (id: number, setOpen: (v: boolean) => void) => {
     const { mutate: submitStay, isPending: stayPending } = useMutation({
         mutationFn: (data: StayRequest) => stayService.newStay(data),
         onSuccess: () => {
+            handleClose()
             toast.success("Hospedagem registrada com sucesso")
             queryClient.invalidateQueries({ queryKey: ['rooms'] })
-            handleClose()
         },
         onError: () => {
             queryClient.invalidateQueries({ queryKey: ["me"] })
