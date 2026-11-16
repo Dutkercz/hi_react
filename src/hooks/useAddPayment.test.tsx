@@ -57,7 +57,7 @@ describe("useAddPayment", () => {
     it("rejects an amount higher than the remaining balance", () => {
         const { result } = setup()
 
-        act(() => result.current.handleSubmit("R$ 50,01"))
+        act(() => result.current.handleSubmit("R$ 50,01", "PIX"))
 
         expect(stayService.addPaymentAmout).not.toHaveBeenCalled()
         expect(toast.error).toHaveBeenCalledWith("O pagamento não pode ser maior que o valor a pagar")
@@ -67,9 +67,9 @@ describe("useAddPayment", () => {
         vi.mocked(stayService.addPaymentAmout).mockResolvedValue({})
         const { result, setOpen, queryClient } = setup()
 
-        act(() => result.current.handleSubmit("R$ 25,00"))
+        act(() => result.current.handleSubmit("R$ 25,00", "PIX"))
 
-        await waitFor(() => expect(stayService.addPaymentAmout).toHaveBeenCalledWith(15, { amount: 25 }))
+        await waitFor(() => expect(stayService.addPaymentAmout).toHaveBeenCalledWith(15, { amount: 25, paymentMethod: "PIX" }))
         await waitFor(() => expect(setOpen).toHaveBeenCalledWith(false))
         expect(toast.success).toHaveBeenCalledWith("Pagamento registrado com sucesso!")
         queryClient.clear()
@@ -79,7 +79,7 @@ describe("useAddPayment", () => {
         vi.mocked(stayService.addPaymentAmout).mockRejectedValue(new Error("Falha na API"))
         const { result, setOpen, queryClient } = setup()
 
-        act(() => result.current.handleSubmit("R$ 25,00"))
+        act(() => result.current.handleSubmit("R$ 25,00", "PIX"))
 
         await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Erro ao adicionar pagamento"))
         expect(setOpen).not.toHaveBeenCalled()
