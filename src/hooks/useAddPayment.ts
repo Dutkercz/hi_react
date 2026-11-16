@@ -3,6 +3,9 @@ import { useFormatCurrency } from "@/hooks/useFormatCurrency";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import type { RoomResponse } from "@/types/room";
+import type { AxiosError } from "axios";
+import type { BackendError } from "@/types/backendError";
+import type { PaymentMethod, StayPayment } from "@/types/payment";
 
 type UseAddPaymentProps = {
     room: RoomResponse,
@@ -21,24 +24,24 @@ export const useAddPayment = ({ room, setOpen }: UseAddPaymentProps) => {
     }
 
     const { mutate, isPending } = useMutation({
-        mutationFn: (data: number) => {
+        mutationFn: (data : StayPayment) => {
             const stayId = room.stay?.id
             if (stayId === undefined) {
                 throw new Error("Hospedagem não encontrada")
             }
-            return stayService.addPaymentAmout(stayId, { amount: data })
+            return stayService.addPaymentAmout(stayId, data)
         },
         onSuccess: () => {
             toast.success("Pagamento registrado com sucesso!")
             queryClient.invalidateQueries({ queryKey: ["rooms"] })
             setOpen(false)
         },
-        onError: () => {
-            toast.error("Erro ao adicionar pagamento")
+        onError: (error: AxiosError<BackendError[]>) => {
+            toast.error("Erro ao adicionar pagamento: " + error.response?.data[0].detail)
         }
     })
 
-    const handleSubmit = (amount: string) => {
+    const handleSubmit = (amount: string, paymentMethod: PaymentMethod) => {
         const paymentAmount = parseAmount(amount)
 
         if (paymentAmount <= 0) {
@@ -49,7 +52,7 @@ export const useAddPayment = ({ room, setOpen }: UseAddPaymentProps) => {
             toast.error("O pagamento não pode ser maior que o valor a pagar")
             return
         }
-        mutate(paymentAmount)
+        mutate({amount: paymentAmount, method: paymentMethod})
     }
 
     return { handleSubmit, formatCurrency, remainingPrice, isPending }

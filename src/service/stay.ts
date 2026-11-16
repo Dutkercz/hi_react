@@ -7,8 +7,8 @@ export const stayService = {
         const response = await axiosService.post("/stays", data)
         return response.data
     },
-    addPaymentAmout: async (id: number, ammout: StayPayment) => {
-        const response = await axiosService.patch(`/stays/${id}/add-payment-amount`, ammout)
+    addPaymentAmout: async (id: number, data: StayPayment) => {
+        const response = await axiosService.patch(`/stays/${id}/add-payment-amount`, data)
         return response.data
     },
     updateStay: async (id: number) => {

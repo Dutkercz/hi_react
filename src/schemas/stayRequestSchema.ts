@@ -14,7 +14,7 @@ export const staySchema = z.object({
     stayGuests: array(
         z.object({ name: z.string() })),
     isPaid: z.boolean(),
-    method:  z.enum(['PIX', 'CREDIT_CARD', 'DEBIT_CARD', 'CASH'], 'O campo forma de pagamento é obrigatório.'),
+    method: z.enum(['PIX', 'CREDIT_CARD', 'DEBIT_CARD', 'CASH']).optional(),
     checkIn: z
         .string()
         .nonempty({ message: 'O campo data de checkin não pode estar em branco.' })
@@ -41,6 +41,12 @@ export const staySchema = z.object({
             date.setHours(8, 55, 0) //o ISOString de baixo vai bota o horario no GMT 0, colocando 8:55 aqui vai dar 11:55 BR
             return date.toISOString().slice(0,16)
         } )
-})
+}).refine(
+    ({ isPaid, method }) => !isPaid || method !== undefined,
+    {
+        message: 'O campo forma de pagamento é obrigatório.',
+        path: ['method'],
+    }
+)
 
 export type StaySchema = z.infer<typeof staySchema>

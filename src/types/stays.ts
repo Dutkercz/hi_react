@@ -11,7 +11,7 @@ export type StayRequest = {
     checkOut: string
     totalGuests: number
     isPaid: boolean
-    method: PaymentMethod
+    method?: PaymentMethod
     stayGuests: StayGuest[]
 }
 

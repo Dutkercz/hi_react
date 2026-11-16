@@ -7,6 +7,10 @@ import { Button } from "../ui/button"
 import { CreditCardIcon, WalletCardsIcon } from "lucide-react"
 import { useAddPayment } from "../../hooks/useAddPayment"
 import type { RoomResponse } from "@/types/room"
+import { Field, FieldLegend, FieldSet } from "../ui/field"
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
+import { Label } from "../ui/label"
+import type { PaymentMethod } from "@/types/payment"
 
 type AddPaymentDialogProps = {
     setOpen: (v: boolean) => void
@@ -16,6 +20,7 @@ type AddPaymentDialogProps = {
 const AddPaymentDialog = ({ setOpen, room }: AddPaymentDialogProps) => {
     
     const [amount, setAmount] = useState("")
+    const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("PIX")
     const setOpenAndReset = (open: boolean) => {
         if (!open) {
             setAmount("")
@@ -69,12 +74,39 @@ const AddPaymentDialog = ({ setOpen, room }: AddPaymentDialogProps) => {
                 />
                 <p className="text-xs text-muted-foreground">Informe o valor em reais, com até duas casas decimais.</p>
             </div>
+            <div>
+            <FieldSet>
+                  <FieldLegend>Forma de pagamento</FieldLegend>
+                  <RadioGroup
+                    value={paymentMethod}
+                    onValueChange={setPaymentMethod}
+                    className="w-fit">
+
+                    <Field orientation="horizontal">
+                      <RadioGroupItem value="PIX" id="PIX" />
+                      <Label htmlFor="r1">PIX</Label>
+                    </Field>
+                    <Field orientation="horizontal">
+                      <RadioGroupItem value="CREDIT_CARD" id="CREDIT_CARD" />
+                      <Label htmlFor="r2">Cartão Crédito</Label>
+                    </Field>
+                    <Field orientation="horizontal">
+                      <RadioGroupItem value="DEBIT_CARD" id="DEBIT_CARD" />
+                      <Label htmlFor="r3">Cartão Débito</Label>
+                    </Field>
+                    <Field orientation="horizontal">
+                      <RadioGroupItem value="CASH" id="CASH" />
+                      <Label htmlFor="r3">Dinheiro</Label>
+                    </Field>
+                  </RadioGroup>
+                </FieldSet>
+            </div>
 
             <DialogFooter className="-mx-4 -mb-4">
                 <DialogClose render={<Button type="button" variant="outline" onClick={() => setAmount("")} />}>
                     Cancelar
                 </DialogClose>
-                <Button type="button" onClick={() => handleSubmit(amount)} disabled={isPending}>
+                <Button type="button" onClick={() => handleSubmit(amount, paymentMethod)} disabled={isPending}>
                     <WalletCardsIcon />
                     {isPending ? "Registrando..." : "Registrar pagamento"}
                 </Button>
