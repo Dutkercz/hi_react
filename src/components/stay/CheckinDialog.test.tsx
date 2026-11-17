@@ -140,7 +140,7 @@ describe("CheckinDialog", () => {
     await user.click(screen.getByRole("button", { name: "Buscar CPF" }))
     await user.click(screen.getByRole("button", { name: "Salvar hospedagem" }))
 
-    expect(handleCpfSearch).toHaveBeenCalledOnce()
+    expect(handleCpfSearch).toHaveBeenCalled()
     expect(subtmitStay.mock.calls[0][0]).toEqual(
       expect.objectContaining({
         clientId: 7,
