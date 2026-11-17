@@ -1,6 +1,6 @@
 import { Button } from '../ui/button'
-import { DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog'
-import { Field, FieldContent, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSet } from '../ui/field'
+import { DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog'
+import { Field, FieldContent, FieldError, FieldGroup, FieldLabel, FieldSet, FieldTitle } from '../ui/field'
 import { Controller, useFieldArray } from "react-hook-form"
 import { Input } from '../ui/input'
 import { useStayRequest } from '@/hooks/useStayRequest'
@@ -11,6 +11,8 @@ import { Checkbox } from '../ui/checkbox'
 import type { RoomResponse } from '@/types/room'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 import { Label } from '../ui/label'
+import { Banknote, CreditCard, CreditCardIcon, QrCode } from 'lucide-react'
+import { Separator } from '../ui/separator'
 
 type ManageRoomProps = {
   setOpen: (v: boolean) => void
@@ -49,15 +51,12 @@ const CheckinDialog = ({ setOpen, room }: ManageRoomProps) => {
   }, [totalGuests, stayGuestFields.length, appendStayGuest, removeStayGuest])
 
   return (
-    <DialogContent className="sm:max-w-xl">
-      <form onSubmit={form.handleSubmit(subtmitStay)} className="space-y-5">
+    <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+      <form onSubmit={form.handleSubmit(subtmitStay)} className="space-y-4">
         <DialogHeader className="space-y-2">
           <DialogTitle className="text-lg font-semibold">
             Check-in Apartamento {room.roomNumber}
           </DialogTitle>
-          <DialogDescription className="text-sm text-muted-foreground">
-            Preencha os dados da hospedagem para prosseguir.
-          </DialogDescription>
         </DialogHeader>
 
         {room?.id && (
@@ -65,18 +64,20 @@ const CheckinDialog = ({ setOpen, room }: ManageRoomProps) => {
         )}
 
         <FieldGroup className="grid gap-4 md:grid-cols-2">
-
           <input type="hidden" {...form.register("clientId")} />
-
           <Field className="col-span-full">
+            {/** <div className='col-span-full'><FieldLegend className='mt-2'>Identificação do Cliente</FieldLegend>
+              <Separator className="col-span-full"> </Separator> </div>
+                */}
             <div className="flex w-full items-center gap-2.5">
               <InputMask
+                id="cpf"
                 value={cpfValue}
                 component={Input}
                 replacement={{ _: /\d/ }}
                 mask="___.___.___-__"
                 placeholder="000.000.000-00"
-                className="flex-1"
+                className="flex-1 min-h-10"
                 disabled={cpfPending}
                 onChange={(e) => handleCpfChange(e.target.value)}
               />
@@ -84,8 +85,52 @@ const CheckinDialog = ({ setOpen, room }: ManageRoomProps) => {
                 {cpfPending ? "Buscando..." : "Buscar CPF"}
               </Button>
             </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 items-start gap-4 border p-4 bg-background/20 rounded-lg w-full">
+              <div className='flex-1'>
+                <FieldTitle>Cliente</FieldTitle>
+                <FieldContent className="text-sm text-muted-foreground">
+                  {clientName || 'Nenhum cliente selecionado'}
+                </FieldContent>
+              </div>
+              <div>
+                <FieldTitle>Valor diária</FieldTitle>
+                {clientName &&
+                  <FieldContent className="text-sm text-muted-foreground">
+                    {formatCurrency(dailyPrice[totalGuests as keyof typeof dailyPrice] || "--")}
+                  </FieldContent>
+                }
+              </div>
+              <div>
+                <Controller
+                  name="totalGuests"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}
+                      className="w-40">
+                      <FieldLabel htmlFor="totalGuests">Total de hóspedes</FieldLabel>
+                      <Input
+                        id="totalGuests"
+                        type="number"
+                        {...field}
+                        min={1}
+                        autoComplete='off'
+                        onChange={(event) => field.onChange(event.target.valueAsNumber)}
+                      />
+                      {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                    </Field>
+                  )}
+                />
+              </div>
+            </div>
           </Field>
-
+          {/**
+           * 
+          <div className='col-span-full'>
+            <FieldLegend className='mt-2'>Dados Hospedagem</FieldLegend>
+            <Separator className="col-span-full">
+            </Separator>
+          </div>
+              */}
           <Controller
             name="checkIn"
             control={form.control}
@@ -96,7 +141,7 @@ const CheckinDialog = ({ setOpen, room }: ManageRoomProps) => {
                   <Input
                     type='datetime-local'
                     inputMode='text'
-                    className="rounded-lg border"
+                    className="rounded-lg border min-h-10"
                     {...field}
                     id="checkIn"
                     aria-invalid={fieldState.invalid}
@@ -104,10 +149,8 @@ const CheckinDialog = ({ setOpen, room }: ManageRoomProps) => {
                 </div>
                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               </Field>
-
             )}
           />
-
           <Controller
             name="checkOut"
             control={form.control}
@@ -117,7 +160,7 @@ const CheckinDialog = ({ setOpen, room }: ManageRoomProps) => {
                 <div>
                   <Input
                     type='datetime-local'
-                    className="rounded-lg border p-2"
+                    className="rounded-lg border p-2 min-h-10"
                     {...field}
                     id="checkOut"
                     aria-invalid={fieldState.invalid}
@@ -127,26 +170,25 @@ const CheckinDialog = ({ setOpen, room }: ManageRoomProps) => {
               </Field>
             )}
           />
-
-
-          <Field className="flex flex-col justify-between gap-2 rounded-lg border border-border/70 bg-muted/50 p-4">
-            <FieldLabel>Cliente</FieldLabel>
-            <FieldContent className="text-sm text-muted-foreground">
-              {clientName || 'Nenhum cliente selecionado'}
-              {clientName &&
-                <div>Diária <span>{formatCurrency(dailyPrice[totalGuests as keyof typeof dailyPrice] ?? 0)}</span></div>
-              }
-            </FieldContent>
-
+          {/**
+           * 
+          <div className='col-span-full'>
+            <FieldLegend className='mt-2'>Dados Pagamento</FieldLegend>
+            <Separator className="col-span-full">
+            </Separator>
+          </div>
+              */}
+          <div className="col-span-full gap-2 rounded-lg border border-border/70 bg-muted/50 p-4">
             <Controller
               name='isPaid'
               control={form.control}
               render={({ field, fieldState }) => (
-                <div >
+                <div>
                   <Field data-invalid={fieldState.invalid} >
-                    <FieldContent className="flex flex-row items-center space-x-3 space-y-0">
-                      <FieldLabel htmlFor='isPaid'>Pago no chekcin</FieldLabel>
+                    <FieldContent className="flex flex-row justify-between space-x-3 space-y-0">
+                      <FieldLabel htmlFor='isPaid'>Pago no check-in</FieldLabel>
                       <Checkbox
+                        id="isPaid"
                         checked={field.value}
                         onCheckedChange={field.onChange}
                       />
@@ -156,69 +198,56 @@ const CheckinDialog = ({ setOpen, room }: ManageRoomProps) => {
                 </div>
               )}
             />
-          </Field>
+            <Separator />
+            {form.watch("isPaid") && (
+              <>
+                <Controller
+                  name="method"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <FieldSet data-invalid={fieldState.invalid} className="w-full">
+                      <RadioGroup
+                        value={field.value ?? ""}
+                        onValueChange={field.onChange}
+                        className="grid w-full grid-cols-2 gap-0.5"
+                      >
+                        {[
+                          { value: "PIX", label: "PIX", icon: QrCode },
+                          { value: "CASH", label: "Dinheiro", icon: Banknote },
+                          { value: "CREDIT_CARD", label: "Cartão Crédito", icon: CreditCard },
+                          { value: "DEBIT_CARD", label: "Cartão Débito", icon: CreditCardIcon },
+                        ].map((option) => {
+                          const Icon = option.icon
+                          const isSelected = field.value === option.value
 
-          <Controller
-            name="totalGuests"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}
-                className="">
-                <FieldLabel htmlFor="totalGuests">Total de hóspedes</FieldLabel>
-                <Input
-                  id="totalGuests"
-                  type="number"
-                  {...field}
-                  min={1}
-                  autoComplete='off'
-                  className="mt-2"
-                  onChange={(event) => field.onChange(event.target.valueAsNumber)}
+                          return (
+                            <div key={option.value}>
+                              <RadioGroupItem
+                                value={option.value}
+                                id={option.value}
+                                className="sr-only"
+                              />
+                              <Label
+                                htmlFor={option.value}
+                                className={`flex w-full cursor-pointer items-center justify-center gap- rounded-md border py-2.5 text-sm font-medium transition-colors ${isSelected
+                                  ? "border-primary bg-card text-primary"
+                                  : "border-muted bg-popover hover:bg-accent hover:text-accent-foreground"
+                                  }`}
+                              >
+                                <Icon className="h-4 w-4" />
+                                <span>{option.label}</span>
+                              </Label>
+                            </div>
+                          )
+                        })}
+                      </RadioGroup>
+                      {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                    </FieldSet>
+                  )}
                 />
-                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-              </Field>
+              </>
             )}
-          />
-
-          {form.watch("isPaid") &&
-            <Controller
-              name='method'
-              control={form.control}
-              render={({ field, fieldState }) => (
-
-                <FieldSet
-                  {...field}
-                  data-invalid={fieldState.invalid}
-                >
-                  <FieldLegend>Forma de pagamento</FieldLegend>
-                  <RadioGroup
-                    value={field.value}
-                    onValueChange={field.onChange}
-                    className="w-fit">
-
-                    <Field orientation="horizontal">
-                      <RadioGroupItem value="PIX" id="PIX" />
-                      <Label htmlFor="r1">PIX</Label>
-                    </Field>
-                    <Field orientation="horizontal">
-                      <RadioGroupItem value="CREDIT_CARD" id="CREDIT_CARD" />
-                      <Label htmlFor="r2">Cartão Crédito</Label>
-                    </Field>
-                    <Field orientation="horizontal">
-                      <RadioGroupItem value="DEBIT_CARD" id="DEBIT_CARD" />
-                      <Label htmlFor="r3">Cartão Débito</Label>
-                    </Field>
-                    <Field orientation="horizontal">
-                      <RadioGroupItem value="CASH" id="CASH" />
-                      <Label htmlFor="r3">Dinheiro</Label>
-                    </Field>
-                  </RadioGroup>
-
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </FieldSet>
-              )}
-            />
-
-          }
+          </div>
 
           {totalGuests > 1 && (
             <Field className="md:col-span-2 sm:col-span-1 lg:col-span-2 rounded-lg border border-border/70 bg-muted/40 p-4">
